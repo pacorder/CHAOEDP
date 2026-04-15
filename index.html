@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operación Finiquito EDP</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts para estilo Ciberpunk/Moderno -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        neon: ['Orbitron', 'sans-serif'],
+                        body: ['Rajdhani', 'sans-serif'],
+                    },
+                    colors: {
+                        darkBg: '#050505',
+                        panelBg: '#11131a',
+                        neonCyan: '#00f3ff',
+                        neonPink: '#ff0055',
+                        neonPurple: '#b026ff',
+                        neonYellow: '#ffea00'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #050505;
+            background-image: radial-gradient(circle at 50% 0%, #1a0b2e 0%, transparent 50%), 
+                              radial-gradient(circle at 50% 100%, #003333 0%, transparent 50%);
+            color: white;
+            min-height: 100vh;
+        }
+        
+        /* Efectos Neón */
+        .text-glow-cyan { text-shadow: 0 0 10px #00f3ff, 0 0 20px #00f3ff; }
+        .text-glow-pink { text-shadow: 0 0 10px #ff0055, 0 0 20px #ff0055; }
+        
+        .box-glow {
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.1), inset 0 0 10px rgba(0, 243, 255, 0.05);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .box-glow:hover {
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3), inset 0 0 15px rgba(0, 243, 255, 0.1);
+            border: 1px solid rgba(0, 243, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        /* Checkbox personalizado */
+        input[type="checkbox"] {
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border: 2px solid #b026ff;
+            border-radius: 4px;
+            background: transparent;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 0 10px rgba(176, 38, 255, 0.3);
+            flex-shrink: 0;
+            margin-top: 4px;
+        }
+        input[type="checkbox"]:checked {
+            background-color: #b026ff;
+            box-shadow: 0 0 15px #b026ff;
+        }
+        input[type="checkbox"]:checked::after {
+            content: '✔';
+            color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 14px;
+        }
+
+        /* Calendario */
+        .cal-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            background: rgba(255,255,255,0.03);
+            font-weight: bold;
+            transition: all 0.2s;
+            cursor: default;
+        }
+        .cal-day:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .cal-special {
+            border: 1px solid #ffea00;
+            box-shadow: 0 0 8px rgba(255, 234, 0, 0.4);
+            color: #ffea00;
+            text-shadow: 0 0 5px #ffea00;
+            background: rgba(255, 234, 0, 0.1);
+        }
+        .cal-target {
+            background-color: #00f3ff;
+            color: #050505;
+            box-shadow: 0 0 15px #00f3ff;
+            text-shadow: none;
+            border: none;
+        }
+        .cal-today {
+            border: 2px solid #b026ff;
+            background: rgba(176, 38, 255, 0.2);
+        }
+        
+        /* Ocultar barra de scroll para estética limpia */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #b026ff; border-radius: 4px; }
+    </style>
+</head>
+<body class="font-body font-sans text-gray-200 antialiased p-4 md:p-8 flex flex-col items-center">
+
+    <!-- Encabezado -->
+    <header class="text-center mb-10 mt-4">
+        <h2 class="text-neonPurple font-bold tracking-widest uppercase mb-2">Operación Salida</h2>
+        <h1 class="text-4xl md:text-6xl lg:text-7xl font-neon text-glow-cyan font-black tracking-wider uppercase">
+            Finiquito EDP
+        </h1>
+        <p class="mt-4 text-xl md:text-2xl text-gray-400">El 30 de Junio seremos libres.</p>
+    </header>
+
+    <main class="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-8 items-start">
+        
+        <!-- COLUMNA IZQUIERDA: Reloj y Calendarios -->
+        <div class="space-y-6">
+            
+            <!-- Contador -->
+            <div class="bg-panelBg box-glow rounded-2xl p-6 text-center">
+                <h3 class="text-xl font-neon text-neonCyan mb-4 border-b border-gray-800 pb-2">CUENTA REGRESIVA</h3>
+                
+                <div class="grid grid-cols-4 gap-2 md:gap-4" id="countdown">
+                    <div class="flex flex-col">
+                        <span class="text-3xl md:text-5xl font-neon text-white text-glow-cyan" id="days">00</span>
+                        <span class="text-xs md:text-sm text-gray-500 uppercase mt-1">Días</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-3xl md:text-5xl font-neon text-white" id="hours">00</span>
+                        <span class="text-xs md:text-sm text-gray-500 uppercase mt-1">Horas</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-3xl md:text-5xl font-neon text-white" id="minutes">00</span>
+                        <span class="text-xs md:text-sm text-gray-500 uppercase mt-1">Min</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-3xl md:text-5xl font-neon text-neonPink text-glow-pink" id="seconds">00</span>
+                        <span class="text-xs md:text-sm text-gray-500 uppercase mt-1">Seg</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calendarios (Abril, Mayo, Junio) -->
+            <div class="bg-panelBg box-glow rounded-2xl p-6">
+                <div class="flex justify-between items-center mb-6 border-b border-gray-800 pb-2">
+                    <h3 class="text-xl font-neon text-neonCyan">EL CAMINO HACIA LA LIBERTAD</h3>
+                    <div class="flex gap-4 text-xs text-gray-400">
+                        <div class="flex items-center gap-1"><div class="w-3 h-3 border border-neonYellow bg-yellow-400/20 rounded"></div> Eventos</div>
+                        <div class="flex items-center gap-1"><div class="w-3 h-3 bg-neonCyan rounded"></div> Finiquito</div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="calendars-container">
+                    <!-- Generado por JS -->
+                </div>
+            </div>
+
+        </div>
+
+        <!-- COLUMNA DERECHA: Checklist -->
+        <div class="bg-panelBg box-glow rounded-2xl p-6 lg:p-8 sticky top-8">
+            <h3 class="text-2xl font-neon text-neonPurple mb-2 text-shadow-purple">ROADMAP DE DESPEDIDA</h3>
+            <p class="text-gray-400 mb-6 text-sm">Nuestras prioridades antes de terminar.</p>
+            
+            <ul class="space-y-3" id="checklist">
+                <!-- 5 de Junio -->
+                <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors group">
+                    <input type="checkbox" id="task1">
+                    <label for="task1" class="cursor-pointer text-base md:text-lg flex-1">
+                        <span class="text-neonYellow font-bold block mb-1">Miércoles 5 de Junio</span>
+                        🏃‍♂️ Partido de despedida (Previa mundialista. Cuidado con lesiones).
+                    </label>
+                </li>
+                <!-- 11 de Junio -->
+                <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors group">
+                    <input type="checkbox" id="task2">
+                    <label for="task2" class="cursor-pointer text-base md:text-lg flex-1">
+                        <span class="text-neonYellow font-bold block mb-1">11 de Junio</span>
+                        ⚽ Inicio del Mundial de Fútbol (Modo avión activado).
+                    </label>
+                </li>
+                <!-- 15 de Junio -->
+                <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors group">
+                    <input type="checkbox" id="task3">
+                    <label for="task3" class="cursor-pointer text-base md:text-lg flex-1">
+                        <span class="text-neonYellow font-bold block mb-1">15 de Junio</span>
+                        📺 Sorteo de la televisión (Partido: España vs Cabo Verde).
+                    </label>
+                </li>
+                <!-- 16 de Junio -->
+                <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors group">
+                    <input type="checkbox" id="task4">
+                    <label for="task4" class="cursor-pointer text-base md:text-lg flex-1">
+                        <span class="text-neonYellow font-bold block mb-1">16 de Junio</span>
+                        🍽️ Cena de inauguración de proyecto.
+                    </label>
+                </li>
+                <!-- 25 de Junio -->
+                <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors group">
+                    <input type="checkbox" id="task5">
+                    <label for="task5" class="cursor-pointer text-base md:text-lg flex-1">
+                        <span class="text-neonYellow font-bold block mb-1">Jueves 25 de Junio</span>
+                        💻 Entrega de Notebooks para la casa.
+                    </label>
+                </li>
+                <!-- 30 de Junio -->
+                <li class="flex items-start gap-4 p-4 mt-6 rounded-xl bg-gray-900/80 border-2 border-neonCyan shadow-[0_0_15px_rgba(0,243,255,0.2)]">
+                    <input type="checkbox" id="task6">
+                    <label for="task6" class="cursor-pointer text-xl font-bold flex-1 text-white">
+                        <span class="text-neonCyan block mb-1 text-glow-cyan">30 de Junio</span>
+                        💰 FIRMAR EL FINIQUITO Y CELEBRAR
+                    </label>
+                </li>
+            </ul>
+        </div>
+    </main>
+
+    <!-- Lógica JavaScript -->
+    <script>
+        // --- 1. LÓGICA DEL CONTADOR ---
+        function initCountdown() {
+            const currentYear = new Date().getFullYear();
+            // Mes 5 es Junio en JavaScript (Enero es 0)
+            let targetDate = new Date(currentYear, 5, 30, 23, 59, 59).getTime();
+
+            // Ajuste automático por si pasa de año
+            if (new Date().getTime() > targetDate) {
+                targetDate = new Date(currentYear + 1, 5, 30, 23, 59, 59).getTime();
+            }
+
+            const updateTimer = setInterval(() => {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+
+                if (distance < 0) {
+                    clearInterval(updateTimer);
+                    document.getElementById("countdown").innerHTML = "<h2 class='text-3xl md:text-5xl text-neonPink col-span-4 glow-pink font-neon'>¡OBJETIVO COMPLETADO!</h2>";
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById("days").innerText = days.toString().padStart(2, '0');
+                document.getElementById("hours").innerText = hours.toString().padStart(2, '0');
+                document.getElementById("minutes").innerText = minutes.toString().padStart(2, '0');
+                document.getElementById("seconds").innerText = seconds.toString().padStart(2, '0');
+            }, 1000);
+        }
+
+        // --- 2. LÓGICA DEL CHECKLIST (Guardar estado) ---
+        function initChecklist() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            
+            checkboxes.forEach(box => {
+                const savedState = localStorage.getItem(box.id);
+                if (savedState === 'true') {
+                    box.checked = true;
+                    toggleStrikeThrough(box);
+                }
+
+                box.addEventListener('change', (e) => {
+                    localStorage.setItem(e.target.id, e.target.checked);
+                    toggleStrikeThrough(e.target);
+                });
+            });
+        }
+
+        function toggleStrikeThrough(checkbox) {
+            const label = document.querySelector(`label[for="${checkbox.id}"]`);
+            if (checkbox.checked) {
+                label.classList.add('opacity-40', 'grayscale');
+                label.style.textDecoration = "line-through";
+            } else {
+                label.classList.remove('opacity-40', 'grayscale');
+                label.style.textDecoration = "none";
+            }
+        }
+
+        // --- 3. LÓGICA DE GENERACIÓN DE CALENDARIOS ---
+        function getEventTooltip(month, day) {
+            // Mes 5 = Junio
+            if (month === 5) {
+                if (day === 5) return "Partido de despedida (Previa mundialista)";
+                if (day === 11) return "Inicio de Mundial de Fútbol";
+                if (day === 15) return "Sorteo de la TV (España vs Cabo Verde)";
+                if (day === 16) return "Cena de inauguración de proyecto";
+                if (day === 25) return "Entrega de Notebooks";
+                if (day === 30) return "DÍA DEL FINIQUITO";
+            }
+            return "";
+        }
+
+        function buildMonthHTML(year, monthIndex, monthName) {
+            // Días en el mes
+            const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
+            // Día de la semana que empieza (0=Dom, 1=Lun...)
+            let firstDay = new Date(year, monthIndex, 1).getDay();
+            // Ajustar para que Lunes sea 0
+            firstDay = firstDay === 0 ? 6 : firstDay - 1;
+
+            const today = new Date();
+            const isCurrentMonth = today.getFullYear() === year && today.getMonth() === monthIndex;
+
+            let html = `
+            <div class="bg-black/40 border border-gray-800 rounded-xl p-4">
+                <h4 class="text-center font-neon text-white tracking-widest mb-3">${monthName}</h4>
+                <div class="grid grid-cols-7 gap-1 text-center text-[10px] text-gray-500 mb-2">
+                    <div>L</div><div>M</div><div>X</div><div>J</div><div>V</div><div>S</div><div>D</div>
+                </div>
+                <div class="grid grid-cols-7 gap-1">`;
+
+            // Celdas vacías previas
+            for (let i = 0; i < firstDay; i++) {
+                html += `<div></div>`;
+            }
+
+            // Días del mes
+            for (let day = 1; day <= daysInMonth; day++) {
+                let classes = "cal-day text-xs";
+                let tooltip = getEventTooltip(monthIndex, day);
+
+                // Marcar día actual
+                if (isCurrentMonth && today.getDate() === day) {
+                    classes += " cal-today";
+                }
+
+                // Lógica de marcadores en JUNIO (Mes índice 5)
+                if (monthIndex === 5) {
+                    if ([5, 11, 15, 16, 25].includes(day)) {
+                        classes += " cal-special"; // Eventos
+                    }
+                    if (day === 30) {
+                        classes += " cal-target text-black font-black"; // Finiquito
+                    }
+                }
+
+                html += `<div class="${classes}" title="${tooltip}">${day}</div>`;
+            }
+
+            html += `</div></div>`;
+            return html;
+        }
+
+        function initCalendars() {
+            const container = document.getElementById('calendars-container');
+            const year = new Date().getFullYear();
+            
+            // Generar Abril (3), Mayo (4) y Junio (5)
+            const htmlApril = buildMonthHTML(year, 3, "ABRIL");
+            const htmlMay   = buildMonthHTML(year, 4, "MAYO");
+            const htmlJune  = buildMonthHTML(year, 5, "JUNIO");
+
+            container.innerHTML = htmlApril + htmlMay + htmlJune;
+        }
+
+        // --- INICIAR TODO AL CARGAR ---
+        window.onload = () => {
+            initCountdown();
+            initChecklist();
+            initCalendars();
+        };
+    </script>
+</body>
+</html>
