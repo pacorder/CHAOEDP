@@ -226,15 +226,23 @@
                 <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors group">
                     <input type="checkbox" id="task_may20">
                     <label for="task_may20" class="cursor-pointer text-base md:text-lg flex-1">
-                        <span class="text-neonYellow font-bold block mb-1">Miércoles 20 de Mayo</span>
+                        <span class="text-neonYellow font-bold block mb-1">20 de Mayo</span>
                         🎾 Americano de Tenis.
+                    </label>
+                </li>
+                <!-- 27 de Mayo -->
+                <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors group">
+                    <input type="checkbox" id="task_may27">
+                    <label for="task_may27" class="cursor-pointer text-base md:text-lg flex-1">
+                        <span class="text-neonYellow font-bold block mb-1">27 de Mayo</span>
+                        💄🎾 Americano de Pádel.
                     </label>
                 </li>
                 <!-- 5 de Junio -->
                 <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors group">
                     <input type="checkbox" id="task_jun5">
                     <label for="task_jun5" class="cursor-pointer text-base md:text-lg flex-1">
-                        <span class="text-neonYellow font-bold block mb-1">Miércoles 5 de Junio</span>
+                        <span class="text-neonYellow font-bold block mb-1">5 de Junio</span>
                         🏃‍♂️ Partido de despedida (Previa mundialista).
                     </label>
                 </li>
@@ -266,7 +274,7 @@
                 <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors group">
                     <input type="checkbox" id="task_jun25">
                     <label for="task_jun25" class="cursor-pointer text-base md:text-lg flex-1">
-                        <span class="text-neonYellow font-bold block mb-1">Jueves 25 de Junio</span>
+                        <span class="text-neonYellow font-bold block mb-1">25 de Junio</span>
                         💻 Entrega de Notebooks para la casa.
                     </label>
                 </li>
@@ -356,6 +364,7 @@
                 if (day === 8) return "Weveo con los jefes (Día 3)";
                 if (day === 20) return "Americano de Tenis";
                 if (day === 21) return "FERIADO: Día de las Glorias Navales";
+                if (day === 27) return "Americano de Pádel 💄🎾";
             }
             
             // Eventos y Feriados en Junio (Mes 5)
@@ -410,7 +419,7 @@
                     if (day === 1 || day === 21) {
                         classes += " cal-holiday"; // Feriado (Naranja)
                     }
-                    if ([6, 7, 8, 20].includes(day)) {
+                    if ([6, 7, 8, 20, 27].includes(day)) {
                         classes += " cal-special"; // Eventos (Amarillo)
                     }
                 }
