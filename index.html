@@ -23,7 +23,8 @@
                         neonCyan: '#00f3ff',
                         neonPink: '#ff0055',
                         neonPurple: '#b026ff',
-                        neonYellow: '#ffea00'
+                        neonYellow: '#ffea00',
+                        neonOrange: '#ff6600'
                     }
                 }
             }
@@ -98,6 +99,8 @@
         .cal-day:hover {
             background: rgba(255,255,255,0.1);
         }
+        
+        /* Eventos de la empresa (Amarillo) */
         .cal-special {
             border: 1px solid #ffea00;
             box-shadow: 0 0 8px rgba(255, 234, 0, 0.4);
@@ -105,6 +108,17 @@
             text-shadow: 0 0 5px #ffea00;
             background: rgba(255, 234, 0, 0.1);
         }
+
+        /* Feriados (Naranja) */
+        .cal-holiday {
+            border: 1px solid #ff6600;
+            box-shadow: 0 0 8px rgba(255, 102, 0, 0.4);
+            color: #ff6600;
+            text-shadow: 0 0 5px #ff6600;
+            background: rgba(255, 102, 0, 0.15);
+        }
+
+        /* Día del finiquito (Cyan) */
         .cal-target {
             background-color: #00f3ff;
             color: #050505;
@@ -112,26 +126,29 @@
             text-shadow: none;
             border: none;
         }
+
+        /* Día actual (Morado) */
         .cal-today {
             border: 2px solid #b026ff;
             background: rgba(176, 38, 255, 0.2);
         }
         
-        /* Ocultar barra de scroll para estética limpia */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #050505; }
-        ::-webkit-scrollbar-thumb { background: #b026ff; border-radius: 4px; }
+        /* Scrollbar personalizado para el checklist */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #b026ff; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #ff0055; }
     </style>
 </head>
 <body class="font-body font-sans text-gray-200 antialiased p-4 md:p-8 flex flex-col items-center">
 
     <!-- Encabezado -->
-    <header class="text-center mb-10 mt-4">
+    <header class="text-center mb-8 mt-2">
         <h2 class="text-neonPurple font-bold tracking-widest uppercase mb-2">Operación Salida</h2>
         <h1 class="text-4xl md:text-6xl lg:text-7xl font-neon text-glow-cyan font-black tracking-wider uppercase">
             Finiquito EDP
         </h1>
-        <p class="mt-4 text-xl md:text-2xl text-gray-400">El 30 de Junio seremos libres.</p>
+        <p class="mt-3 text-xl md:text-2xl text-gray-400">El 30 de Junio seremos libres.</p>
     </header>
 
     <main class="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-8 items-start">
@@ -165,10 +182,11 @@
 
             <!-- Calendarios (Abril, Mayo, Junio) -->
             <div class="bg-panelBg box-glow rounded-2xl p-6">
-                <div class="flex justify-between items-center mb-6 border-b border-gray-800 pb-2">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 border-b border-gray-800 pb-2 gap-4">
                     <h3 class="text-xl font-neon text-neonCyan">EL CAMINO HACIA LA LIBERTAD</h3>
-                    <div class="flex gap-4 text-xs text-gray-400">
+                    <div class="flex flex-wrap gap-3 text-[10px] sm:text-xs text-gray-400">
                         <div class="flex items-center gap-1"><div class="w-3 h-3 border border-neonYellow bg-yellow-400/20 rounded"></div> Eventos</div>
+                        <div class="flex items-center gap-1"><div class="w-3 h-3 border border-neonOrange bg-orange-500/20 rounded"></div> Feriados</div>
                         <div class="flex items-center gap-1"><div class="w-3 h-3 bg-neonCyan rounded"></div> Finiquito</div>
                     </div>
                 </div>
@@ -185,51 +203,77 @@
             <h3 class="text-2xl font-neon text-neonPurple mb-2 text-shadow-purple">ROADMAP DE DESPEDIDA</h3>
             <p class="text-gray-400 mb-6 text-sm">Nuestras prioridades antes de terminar.</p>
             
-            <ul class="space-y-3" id="checklist">
+            <!-- Lista con scroll para que no ocupe demasiado espacio hacia abajo -->
+            <ul class="space-y-3 max-h-[60vh] overflow-y-auto pr-3" id="checklist">
+                
+                <!-- 6 al 8 de Mayo -->
+                <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors group">
+                    <input type="checkbox" id="task_may6">
+                    <label for="task_may6" class="cursor-pointer text-base md:text-lg flex-1">
+                        <span class="text-neonYellow font-bold block mb-1">6 al 8 de Mayo</span>
+                        👔 Weveo con los jefes (Sobrevivir a la diplomacia).
+                    </label>
+                </li>
+                <!-- 7 de Mayo -->
+                <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors group">
+                    <input type="checkbox" id="task_may7">
+                    <label for="task_may7" class="cursor-pointer text-base md:text-lg flex-1">
+                        <span class="text-neonYellow font-bold block mb-1">7 de Mayo</span>
+                        ⚡ Energización del proyecto.
+                    </label>
+                </li>
+                <!-- 20 de Mayo -->
+                <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors group">
+                    <input type="checkbox" id="task_may20">
+                    <label for="task_may20" class="cursor-pointer text-base md:text-lg flex-1">
+                        <span class="text-neonYellow font-bold block mb-1">Miércoles 20 de Mayo</span>
+                        🎾 Americano de Tenis.
+                    </label>
+                </li>
                 <!-- 5 de Junio -->
                 <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors group">
-                    <input type="checkbox" id="task1">
-                    <label for="task1" class="cursor-pointer text-base md:text-lg flex-1">
+                    <input type="checkbox" id="task_jun5">
+                    <label for="task_jun5" class="cursor-pointer text-base md:text-lg flex-1">
                         <span class="text-neonYellow font-bold block mb-1">Miércoles 5 de Junio</span>
-                        🏃‍♂️ Partido de despedida (Previa mundialista. Cuidado con lesiones).
+                        🏃‍♂️ Partido de despedida (Previa mundialista).
                     </label>
                 </li>
                 <!-- 11 de Junio -->
                 <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors group">
-                    <input type="checkbox" id="task2">
-                    <label for="task2" class="cursor-pointer text-base md:text-lg flex-1">
+                    <input type="checkbox" id="task_jun11">
+                    <label for="task_jun11" class="cursor-pointer text-base md:text-lg flex-1">
                         <span class="text-neonYellow font-bold block mb-1">11 de Junio</span>
                         ⚽ Inicio del Mundial de Fútbol (Modo avión activado).
                     </label>
                 </li>
                 <!-- 15 de Junio -->
                 <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors group">
-                    <input type="checkbox" id="task3">
-                    <label for="task3" class="cursor-pointer text-base md:text-lg flex-1">
+                    <input type="checkbox" id="task_jun15">
+                    <label for="task_jun15" class="cursor-pointer text-base md:text-lg flex-1">
                         <span class="text-neonYellow font-bold block mb-1">15 de Junio</span>
-                        📺 Sorteo de la televisión (Partido: España vs Cabo Verde).
+                        📺 Sorteo de la televisión (España vs Cabo Verde).
                     </label>
                 </li>
                 <!-- 16 de Junio -->
                 <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors group">
-                    <input type="checkbox" id="task4">
-                    <label for="task4" class="cursor-pointer text-base md:text-lg flex-1">
+                    <input type="checkbox" id="task_jun16">
+                    <label for="task_jun16" class="cursor-pointer text-base md:text-lg flex-1">
                         <span class="text-neonYellow font-bold block mb-1">16 de Junio</span>
                         🍽️ Cena de inauguración de proyecto.
                     </label>
                 </li>
                 <!-- 25 de Junio -->
                 <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors group">
-                    <input type="checkbox" id="task5">
-                    <label for="task5" class="cursor-pointer text-base md:text-lg flex-1">
+                    <input type="checkbox" id="task_jun25">
+                    <label for="task_jun25" class="cursor-pointer text-base md:text-lg flex-1">
                         <span class="text-neonYellow font-bold block mb-1">Jueves 25 de Junio</span>
                         💻 Entrega de Notebooks para la casa.
                     </label>
                 </li>
                 <!-- 30 de Junio -->
                 <li class="flex items-start gap-4 p-4 mt-6 rounded-xl bg-gray-900/80 border-2 border-neonCyan shadow-[0_0_15px_rgba(0,243,255,0.2)]">
-                    <input type="checkbox" id="task6">
-                    <label for="task6" class="cursor-pointer text-xl font-bold flex-1 text-white">
+                    <input type="checkbox" id="task_jun30">
+                    <label for="task_jun30" class="cursor-pointer text-xl font-bold flex-1 text-white">
                         <span class="text-neonCyan block mb-1 text-glow-cyan">30 de Junio</span>
                         💰 FIRMAR EL FINIQUITO Y CELEBRAR
                     </label>
@@ -304,13 +348,24 @@
 
         // --- 3. LÓGICA DE GENERACIÓN DE CALENDARIOS ---
         function getEventTooltip(month, day) {
-            // Mes 5 = Junio
+            // Eventos y Feriados en Mayo (Mes 4)
+            if (month === 4) {
+                if (day === 1) return "FERIADO: Día Nacional del Trabajo";
+                if (day === 6) return "Weveo con los jefes (Día 1)";
+                if (day === 7) return "Energización del proyecto + Weveo con los Jefes";
+                if (day === 8) return "Weveo con los jefes (Día 3)";
+                if (day === 20) return "Americano de Tenis";
+                if (day === 21) return "FERIADO: Día de las Glorias Navales";
+            }
+            
+            // Eventos y Feriados en Junio (Mes 5)
             if (month === 5) {
                 if (day === 5) return "Partido de despedida (Previa mundialista)";
                 if (day === 11) return "Inicio de Mundial de Fútbol";
                 if (day === 15) return "Sorteo de la TV (España vs Cabo Verde)";
                 if (day === 16) return "Cena de inauguración de proyecto";
                 if (day === 25) return "Entrega de Notebooks";
+                if (day === 29) return "FERIADO: San Pedro y San Pablo";
                 if (day === 30) return "DÍA DEL FINIQUITO";
             }
             return "";
@@ -350,13 +405,26 @@
                     classes += " cal-today";
                 }
 
-                // Lógica de marcadores en JUNIO (Mes índice 5)
+                // Lógica Eventos y Feriados MAYO
+                if (monthIndex === 4) {
+                    if (day === 1 || day === 21) {
+                        classes += " cal-holiday"; // Feriado (Naranja)
+                    }
+                    if ([6, 7, 8, 20].includes(day)) {
+                        classes += " cal-special"; // Eventos (Amarillo)
+                    }
+                }
+
+                // Lógica Eventos y Feriados JUNIO
                 if (monthIndex === 5) {
                     if ([5, 11, 15, 16, 25].includes(day)) {
-                        classes += " cal-special"; // Eventos
+                        classes += " cal-special"; // Eventos (Amarillo)
+                    }
+                    if (day === 29) {
+                        classes += " cal-holiday"; // Feriado Chile (Naranja)
                     }
                     if (day === 30) {
-                        classes += " cal-target text-black font-black"; // Finiquito
+                        classes += " cal-target text-black font-black"; // Finiquito (Cyan)
                     }
                 }
 
