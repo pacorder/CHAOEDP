@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Operación Finiquito EDP</title>
+    <title>Operación Finiquito EDP & Mundial</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts para estilo Ciberpunk/Moderno -->
@@ -24,7 +24,8 @@
                         neonPink: '#ff0055',
                         neonPurple: '#b026ff',
                         neonYellow: '#ffea00',
-                        neonOrange: '#ff6600'
+                        neonOrange: '#ff6600',
+                        neonGreen: '#00ff66'
                     }
                 }
             }
@@ -43,13 +44,13 @@
         /* Efectos Neón */
         .text-glow-cyan { text-shadow: 0 0 10px #00f3ff, 0 0 20px #00f3ff; }
         .text-glow-pink { text-shadow: 0 0 10px #ff0055, 0 0 20px #ff0055; }
+        .text-glow-green { text-shadow: 0 0 10px #00ff66, 0 0 20px #00ff66; }
         
         .box-glow {
             box-shadow: 0 0 15px rgba(0, 243, 255, 0.1), inset 0 0 10px rgba(0, 243, 255, 0.05);
             border: 1px solid rgba(0, 243, 255, 0.3);
             backdrop-filter: blur(10px);
         }
-
         .box-glow:hover {
             box-shadow: 0 0 20px rgba(0, 243, 255, 0.3), inset 0 0 15px rgba(0, 243, 255, 0.1);
             border: 1px solid rgba(0, 243, 255, 0.8);
@@ -84,7 +85,7 @@
             font-size: 14px;
         }
 
-        /* Calendario */
+        /* Calendario principal */
         .cal-day {
             aspect-ratio: 1;
             display: flex;
@@ -96,371 +97,365 @@
             transition: all 0.2s;
             cursor: default;
         }
-        .cal-day:hover {
-            background: rgba(255,255,255,0.1);
-        }
+        .cal-day:hover { background: rgba(255,255,255,0.1); }
+        .cal-special { border: 1px solid #ffea00; color: #ffea00; background: rgba(255, 234, 0, 0.1); }
+        .cal-holiday { border: 1px solid #ff6600; color: #ff6600; background: rgba(255, 102, 0, 0.15); }
+        .cal-target { background-color: #00f3ff; color: #050505; text-shadow: none; border: none; }
+        .cal-today { border: 2px solid #b026ff; background: rgba(176, 38, 255, 0.2); }
         
-        /* Eventos de la empresa (Amarillo) */
-        .cal-special {
-            border: 1px solid #ffea00;
-            box-shadow: 0 0 8px rgba(255, 234, 0, 0.4);
-            color: #ffea00;
-            text-shadow: 0 0 5px #ffea00;
-            background: rgba(255, 234, 0, 0.1);
-        }
-
-        /* Feriados (Naranja) */
-        .cal-holiday {
-            border: 1px solid #ff6600;
-            box-shadow: 0 0 8px rgba(255, 102, 0, 0.4);
-            color: #ff6600;
-            text-shadow: 0 0 5px #ff6600;
-            background: rgba(255, 102, 0, 0.15);
-        }
-
-        /* Día del finiquito (Cyan) */
-        .cal-target {
-            background-color: #00f3ff;
-            color: #050505;
-            box-shadow: 0 0 15px #00f3ff;
-            text-shadow: none;
-            border: none;
-        }
-
-        /* Día actual (Morado) */
-        .cal-today {
-            border: 2px solid #b026ff;
-            background: rgba(176, 38, 255, 0.2);
-        }
-        
-        /* Scrollbar personalizado para el checklist */
+        /* Scrollbar personalizado */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 10px; }
         ::-webkit-scrollbar-thumb { background: #b026ff; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #ff0055; }
+
+        /* Animación Fade In */
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Grid Masonry-like fallback (Evitar huecos en tarjetas de distintas alturas) */
+        .auto-rows-min { grid-auto-rows: min-content; }
     </style>
 </head>
-<body class="font-body font-sans text-gray-200 antialiased p-4 md:p-8 flex flex-col items-center">
+<body class="font-body font-sans text-gray-200 antialiased p-4 md:p-8 flex flex-col items-center min-h-screen">
 
-    <!-- Encabezado -->
-    <header class="text-center mb-8 mt-2">
-        <h2 class="text-neonPurple font-bold tracking-widest uppercase mb-2">Operación Salida</h2>
-        <h1 class="text-4xl md:text-6xl lg:text-7xl font-neon text-glow-cyan font-black tracking-wider uppercase">
-            Finiquito EDP
-        </h1>
-        <p class="mt-3 text-xl md:text-2xl text-gray-400">El 30 de Junio seremos libres.</p>
-    </header>
+    <!-- Navegación por Pestañas -->
+    <nav class="flex justify-center gap-4 mb-8 w-full z-10 relative">
+        <button onclick="switchView('home')" id="btn-home" class="px-6 py-2 rounded-full font-neon font-bold text-sm md:text-base border-2 border-neonCyan text-neonCyan shadow-[0_0_15px_rgba(0,243,255,0.3)] transition-all">
+            ⏳ FINIQUITO EDP
+        </button>
+        <button onclick="switchView('mundial')" id="btn-mundial" class="px-6 py-2 rounded-full font-neon font-bold text-sm md:text-base border-2 border-gray-800 text-gray-500 hover:border-neonGreen hover:text-neonGreen transition-all">
+            ⚽ FIXTURE MUNDIAL
+        </button>
+    </nav>
 
-    <main class="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-8 items-start">
-        
-        <!-- COLUMNA IZQUIERDA: Reloj y Calendarios -->
-        <div class="space-y-6">
+    <!-- ========================================== -->
+    <!-- VISTA 1: FINIQUITO EDP (Original)          -->
+    <!-- ========================================== -->
+    <div id="view-home" class="w-full max-w-7xl fade-in">
+        <!-- Encabezado -->
+        <header class="text-center mb-8">
+            <h2 class="text-neonPurple font-bold tracking-widest uppercase mb-2">Operación Salida</h2>
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-neon text-glow-cyan font-black tracking-wider uppercase">
+                Finiquito EDP
+            </h1>
+            <p class="mt-3 text-xl md:text-2xl text-gray-400">El 30 de Junio seremos libres.</p>
+        </header>
+
+        <main class="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-8 items-start">
             
-            <!-- Contador -->
-            <div class="bg-panelBg box-glow rounded-2xl p-6 text-center">
-                <h3 class="text-xl font-neon text-neonCyan mb-4 border-b border-gray-800 pb-2">CUENTA REGRESIVA</h3>
-                
-                <div class="grid grid-cols-4 gap-2 md:gap-4" id="countdown">
-                    <div class="flex flex-col">
-                        <span class="text-3xl md:text-5xl font-neon text-white text-glow-cyan" id="days">00</span>
-                        <span class="text-xs md:text-sm text-gray-500 uppercase mt-1">Días</span>
+            <!-- COLUMNA IZQUIERDA -->
+            <div class="space-y-6">
+                <!-- Contador -->
+                <div class="bg-panelBg box-glow rounded-2xl p-6 text-center">
+                    <h3 class="text-xl font-neon text-neonCyan mb-4 border-b border-gray-800 pb-2">CUENTA REGRESIVA</h3>
+                    <div class="grid grid-cols-4 gap-2 md:gap-4" id="countdown">
+                        <div class="flex flex-col"><span class="text-3xl md:text-5xl font-neon text-white text-glow-cyan" id="days">00</span><span class="text-xs md:text-sm text-gray-500 uppercase mt-1">Días</span></div>
+                        <div class="flex flex-col"><span class="text-3xl md:text-5xl font-neon text-white" id="hours">00</span><span class="text-xs md:text-sm text-gray-500 uppercase mt-1">Horas</span></div>
+                        <div class="flex flex-col"><span class="text-3xl md:text-5xl font-neon text-white" id="minutes">00</span><span class="text-xs md:text-sm text-gray-500 uppercase mt-1">Min</span></div>
+                        <div class="flex flex-col"><span class="text-3xl md:text-5xl font-neon text-neonPink text-glow-pink" id="seconds">00</span><span class="text-xs md:text-sm text-gray-500 uppercase mt-1">Seg</span></div>
                     </div>
-                    <div class="flex flex-col">
-                        <span class="text-3xl md:text-5xl font-neon text-white" id="hours">00</span>
-                        <span class="text-xs md:text-sm text-gray-500 uppercase mt-1">Horas</span>
+                </div>
+
+                <!-- Calendarios -->
+                <div class="bg-panelBg box-glow rounded-2xl p-6">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 border-b border-gray-800 pb-2 gap-4">
+                        <h3 class="text-xl font-neon text-neonCyan">EL CAMINO HACIA LA LIBERTAD</h3>
+                        <div class="flex flex-wrap gap-3 text-[10px] sm:text-xs text-gray-400">
+                            <div class="flex items-center gap-1"><div class="w-3 h-3 border border-neonYellow bg-yellow-400/20 rounded"></div> Eventos</div>
+                            <div class="flex items-center gap-1"><div class="w-3 h-3 border border-neonOrange bg-orange-500/20 rounded"></div> Feriados</div>
+                            <div class="flex items-center gap-1"><div class="w-3 h-3 bg-neonCyan rounded"></div> Finiquito</div>
+                        </div>
                     </div>
-                    <div class="flex flex-col">
-                        <span class="text-3xl md:text-5xl font-neon text-white" id="minutes">00</span>
-                        <span class="text-xs md:text-sm text-gray-500 uppercase mt-1">Min</span>
-                    </div>
-                    <div class="flex flex-col">
-                        <span class="text-3xl md:text-5xl font-neon text-neonPink text-glow-pink" id="seconds">00</span>
-                        <span class="text-xs md:text-sm text-gray-500 uppercase mt-1">Seg</span>
-                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="calendars-container"></div>
                 </div>
             </div>
 
-            <!-- Calendarios (Abril, Mayo, Junio) -->
-            <div class="bg-panelBg box-glow rounded-2xl p-6">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 border-b border-gray-800 pb-2 gap-4">
-                    <h3 class="text-xl font-neon text-neonCyan">EL CAMINO HACIA LA LIBERTAD</h3>
-                    <div class="flex flex-wrap gap-3 text-[10px] sm:text-xs text-gray-400">
-                        <div class="flex items-center gap-1"><div class="w-3 h-3 border border-neonYellow bg-yellow-400/20 rounded"></div> Eventos</div>
-                        <div class="flex items-center gap-1"><div class="w-3 h-3 border border-neonOrange bg-orange-500/20 rounded"></div> Feriados</div>
-                        <div class="flex items-center gap-1"><div class="w-3 h-3 bg-neonCyan rounded"></div> Finiquito</div>
-                    </div>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="calendars-container">
-                    <!-- Generado por JS -->
-                </div>
+            <!-- COLUMNA DERECHA: Checklist -->
+            <div class="bg-panelBg box-glow rounded-2xl p-6 lg:p-8 sticky top-8">
+                <h3 class="text-2xl font-neon text-neonPurple mb-2 text-shadow-purple">ROADMAP DE DESPEDIDA</h3>
+                <p class="text-gray-400 mb-6 text-sm">Nuestras prioridades antes de terminar.</p>
+                <ul class="space-y-3 max-h-[60vh] overflow-y-auto pr-3" id="checklist">
+                    <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors"><input type="checkbox" id="task_may6"><label for="task_may6" class="cursor-pointer text-base md:text-lg flex-1"><span class="text-neonYellow font-bold block mb-1">6 al 8 de Mayo</span>👔 Weveo con los jefes (Sobrevivir a la diplomacia).</label></li>
+                    <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors"><input type="checkbox" id="task_may7"><label for="task_may7" class="cursor-pointer text-base md:text-lg flex-1"><span class="text-neonYellow font-bold block mb-1">7 de Mayo</span>⚡ Energización del proyecto.</label></li>
+                    <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors"><input type="checkbox" id="task_may20"><label for="task_may20" class="cursor-pointer text-base md:text-lg flex-1"><span class="text-neonYellow font-bold block mb-1">20 de Mayo</span>🎾 Americano de Tenis.</label></li>
+                    <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors"><input type="checkbox" id="task_may27"><label for="task_may27" class="cursor-pointer text-base md:text-lg flex-1"><span class="text-neonYellow font-bold block mb-1">27 de Mayo</span>💄🎾 Americano de Pádel.</label></li>
+                    <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors"><input type="checkbox" id="task_jun5"><label for="task_jun5" class="cursor-pointer text-base md:text-lg flex-1"><span class="text-neonYellow font-bold block mb-1">5 de Junio</span>🏃‍♂️ Partido de despedida (Previa mundialista).</label></li>
+                    <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors"><input type="checkbox" id="task_jun11"><label for="task_jun11" class="cursor-pointer text-base md:text-lg flex-1"><span class="text-neonYellow font-bold block mb-1">11 de Junio</span>⚽ Inicio del Mundial de Fútbol.</label></li>
+                    <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors"><input type="checkbox" id="task_jun15"><label for="task_jun15" class="cursor-pointer text-base md:text-lg flex-1"><span class="text-neonYellow font-bold block mb-1">15 de Junio</span>📺 Sorteo de la televisión (España vs Cabo Verde).</label></li>
+                    <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors"><input type="checkbox" id="task_jun16"><label for="task_jun16" class="cursor-pointer text-base md:text-lg flex-1"><span class="text-neonYellow font-bold block mb-1">16 de Junio</span>🍽️ Cena de inauguración de proyecto.</label></li>
+                    <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors"><input type="checkbox" id="task_jun25"><label for="task_jun25" class="cursor-pointer text-base md:text-lg flex-1"><span class="text-neonYellow font-bold block mb-1">25 de Junio</span>💻 Entrega de Notebooks para la casa.</label></li>
+                    <li class="flex items-start gap-4 p-4 mt-6 rounded-xl bg-gray-900/80 border-2 border-neonCyan shadow-[0_0_15px_rgba(0,243,255,0.2)]"><input type="checkbox" id="task_jun30"><label for="task_jun30" class="cursor-pointer text-xl font-bold flex-1 text-white"><span class="text-neonCyan block mb-1 text-glow-cyan">30 de Junio</span>💰 FIRMAR EL FINIQUITO Y CELEBRAR</label></li>
+                </ul>
             </div>
+        </main>
+    </div>
 
+    <!-- ========================================== -->
+    <!-- VISTA 2: FIXTURE MUNDIAL                   -->
+    <!-- ========================================== -->
+    <div id="view-mundial" class="w-full max-w-7xl hidden fade-in">
+        <header class="text-center mb-10">
+            <h2 class="text-neonGreen font-bold tracking-widest uppercase mb-2">Modo Avión Activado</h2>
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-neon text-glow-green font-black tracking-wider uppercase text-white">
+                FIXTURE MUNDIAL
+            </h1>
+            <p class="mt-3 text-xl md:text-2xl text-gray-400">Primera Fase de Grupos (11 al 27 de Junio)</p>
+        </header>
+
+        <!-- Contenedor del calendario del mundial -->
+        <div class="bg-panelBg box-glow rounded-2xl p-6 lg:p-8 border border-neonGreen/30">
+            <!-- Grid responsivo -->
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 auto-rows-min" id="world-cup-grid">
+                <!-- Se rellena con JS -->
+            </div>
         </div>
+    </div>
 
-        <!-- COLUMNA DERECHA: Checklist -->
-        <div class="bg-panelBg box-glow rounded-2xl p-6 lg:p-8 sticky top-8">
-            <h3 class="text-2xl font-neon text-neonPurple mb-2 text-shadow-purple">ROADMAP DE DESPEDIDA</h3>
-            <p class="text-gray-400 mb-6 text-sm">Nuestras prioridades antes de terminar.</p>
-            
-            <!-- Lista con scroll para que no ocupe demasiado espacio hacia abajo -->
-            <ul class="space-y-3 max-h-[60vh] overflow-y-auto pr-3" id="checklist">
-                
-                <!-- 6 al 8 de Mayo -->
-                <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors group">
-                    <input type="checkbox" id="task_may6">
-                    <label for="task_may6" class="cursor-pointer text-base md:text-lg flex-1">
-                        <span class="text-neonYellow font-bold block mb-1">6 al 8 de Mayo</span>
-                        👔 Weveo con los jefes (Sobrevivir a la diplomacia).
-                    </label>
-                </li>
-                <!-- 7 de Mayo -->
-                <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors group">
-                    <input type="checkbox" id="task_may7">
-                    <label for="task_may7" class="cursor-pointer text-base md:text-lg flex-1">
-                        <span class="text-neonYellow font-bold block mb-1">7 de Mayo</span>
-                        ⚡ Energización del proyecto.
-                    </label>
-                </li>
-                <!-- 20 de Mayo -->
-                <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors group">
-                    <input type="checkbox" id="task_may20">
-                    <label for="task_may20" class="cursor-pointer text-base md:text-lg flex-1">
-                        <span class="text-neonYellow font-bold block mb-1">20 de Mayo</span>
-                        🎾 Americano de Tenis.
-                    </label>
-                </li>
-                <!-- 27 de Mayo -->
-                <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors group">
-                    <input type="checkbox" id="task_may27">
-                    <label for="task_may27" class="cursor-pointer text-base md:text-lg flex-1">
-                        <span class="text-neonYellow font-bold block mb-1">27 de Mayo</span>
-                        💄🎾 Americano de Pádel.
-                    </label>
-                </li>
-                <!-- 5 de Junio -->
-                <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors group">
-                    <input type="checkbox" id="task_jun5">
-                    <label for="task_jun5" class="cursor-pointer text-base md:text-lg flex-1">
-                        <span class="text-neonYellow font-bold block mb-1">5 de Junio</span>
-                        🏃‍♂️ Partido de despedida (Previa mundialista).
-                    </label>
-                </li>
-                <!-- 11 de Junio -->
-                <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors group">
-                    <input type="checkbox" id="task_jun11">
-                    <label for="task_jun11" class="cursor-pointer text-base md:text-lg flex-1">
-                        <span class="text-neonYellow font-bold block mb-1">11 de Junio</span>
-                        ⚽ Inicio del Mundial de Fútbol (Modo avión activado).
-                    </label>
-                </li>
-                <!-- 15 de Junio -->
-                <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors group">
-                    <input type="checkbox" id="task_jun15">
-                    <label for="task_jun15" class="cursor-pointer text-base md:text-lg flex-1">
-                        <span class="text-neonYellow font-bold block mb-1">15 de Junio</span>
-                        📺 Sorteo de la televisión (España vs Cabo Verde).
-                    </label>
-                </li>
-                <!-- 16 de Junio -->
-                <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors group">
-                    <input type="checkbox" id="task_jun16">
-                    <label for="task_jun16" class="cursor-pointer text-base md:text-lg flex-1">
-                        <span class="text-neonYellow font-bold block mb-1">16 de Junio</span>
-                        🍽️ Cena de inauguración de proyecto.
-                    </label>
-                </li>
-                <!-- 25 de Junio -->
-                <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors group">
-                    <input type="checkbox" id="task_jun25">
-                    <label for="task_jun25" class="cursor-pointer text-base md:text-lg flex-1">
-                        <span class="text-neonYellow font-bold block mb-1">25 de Junio</span>
-                        💻 Entrega de Notebooks para la casa.
-                    </label>
-                </li>
-                <!-- 30 de Junio -->
-                <li class="flex items-start gap-4 p-4 mt-6 rounded-xl bg-gray-900/80 border-2 border-neonCyan shadow-[0_0_15px_rgba(0,243,255,0.2)]">
-                    <input type="checkbox" id="task_jun30">
-                    <label for="task_jun30" class="cursor-pointer text-xl font-bold flex-1 text-white">
-                        <span class="text-neonCyan block mb-1 text-glow-cyan">30 de Junio</span>
-                        💰 FIRMAR EL FINIQUITO Y CELEBRAR
-                    </label>
-                </li>
-            </ul>
-        </div>
-    </main>
-
-    <!-- Lógica JavaScript -->
+    <!-- ========================================== -->
+    <!-- SCRIPTS                                    -->
+    <!-- ========================================== -->
     <script>
-        // --- 1. LÓGICA DEL CONTADOR ---
+        // --- NAVEGACIÓN (SPA) ---
+        function switchView(view) {
+            document.getElementById('view-home').classList.add('hidden');
+            document.getElementById('view-mundial').classList.add('hidden');
+            
+            const btnHome = document.getElementById('btn-home');
+            const btnMundial = document.getElementById('btn-mundial');
+            
+            btnHome.className = "px-6 py-2 rounded-full font-neon font-bold text-sm md:text-base border-2 border-gray-800 text-gray-500 hover:border-neonCyan hover:text-neonCyan transition-all";
+            btnMundial.className = "px-6 py-2 rounded-full font-neon font-bold text-sm md:text-base border-2 border-gray-800 text-gray-500 hover:border-neonGreen hover:text-neonGreen transition-all";
+
+            if(view === 'home') {
+                document.getElementById('view-home').classList.remove('hidden');
+                btnHome.className = "px-6 py-2 rounded-full font-neon font-bold text-sm md:text-base border-2 border-neonCyan text-neonCyan shadow-[0_0_15px_rgba(0,243,255,0.3)] transition-all";
+            } else {
+                document.getElementById('view-mundial').classList.remove('hidden');
+                btnMundial.className = "px-6 py-2 rounded-full font-neon font-bold text-sm md:text-base border-2 border-neonGreen text-neonGreen shadow-[0_0_15px_rgba(0,255,102,0.3)] transition-all";
+            }
+        }
+
+        // --- LÓGICA DEL CONTADOR Y CHECKLIST ---
         function initCountdown() {
             const currentYear = new Date().getFullYear();
-            // Mes 5 es Junio en JavaScript (Enero es 0)
             let targetDate = new Date(currentYear, 5, 30, 23, 59, 59).getTime();
+            if (new Date().getTime() > targetDate) { targetDate = new Date(currentYear + 1, 5, 30, 23, 59, 59).getTime(); }
 
-            // Ajuste automático por si pasa de año
-            if (new Date().getTime() > targetDate) {
-                targetDate = new Date(currentYear + 1, 5, 30, 23, 59, 59).getTime();
-            }
-
-            const updateTimer = setInterval(() => {
+            setInterval(() => {
                 const now = new Date().getTime();
                 const distance = targetDate - now;
-
                 if (distance < 0) {
-                    clearInterval(updateTimer);
                     document.getElementById("countdown").innerHTML = "<h2 class='text-3xl md:text-5xl text-neonPink col-span-4 glow-pink font-neon'>¡OBJETIVO COMPLETADO!</h2>";
                     return;
                 }
-
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                document.getElementById("days").innerText = days.toString().padStart(2, '0');
-                document.getElementById("hours").innerText = hours.toString().padStart(2, '0');
-                document.getElementById("minutes").innerText = minutes.toString().padStart(2, '0');
-                document.getElementById("seconds").innerText = seconds.toString().padStart(2, '0');
+                document.getElementById("days").innerText = Math.floor(distance / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+                document.getElementById("hours").innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+                document.getElementById("minutes").innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+                document.getElementById("seconds").innerText = Math.floor((distance % (1000 * 60)) / 1000).toString().padStart(2, '0');
             }, 1000);
         }
 
-        // --- 2. LÓGICA DEL CHECKLIST (Guardar estado) ---
         function initChecklist() {
-            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-            
-            checkboxes.forEach(box => {
-                const savedState = localStorage.getItem(box.id);
-                if (savedState === 'true') {
-                    box.checked = true;
-                    toggleStrikeThrough(box);
-                }
-
-                box.addEventListener('change', (e) => {
-                    localStorage.setItem(e.target.id, e.target.checked);
-                    toggleStrikeThrough(e.target);
-                });
+            document.querySelectorAll('input[type="checkbox"]').forEach(box => {
+                if (localStorage.getItem(box.id) === 'true') { box.checked = true; toggleStrike(box); }
+                box.addEventListener('change', (e) => { localStorage.setItem(e.target.id, e.target.checked); toggleStrike(e.target); });
             });
         }
-
-        function toggleStrikeThrough(checkbox) {
-            const label = document.querySelector(`label[for="${checkbox.id}"]`);
-            if (checkbox.checked) {
-                label.classList.add('opacity-40', 'grayscale');
-                label.style.textDecoration = "line-through";
-            } else {
-                label.classList.remove('opacity-40', 'grayscale');
-                label.style.textDecoration = "none";
-            }
+        function toggleStrike(box) {
+            const label = document.querySelector(`label[for="${box.id}"]`);
+            if (box.checked) { label.classList.add('opacity-40', 'grayscale', 'line-through'); } 
+            else { label.classList.remove('opacity-40', 'grayscale', 'line-through'); }
         }
 
-        // --- 3. LÓGICA DE GENERACIÓN DE CALENDARIOS ---
-        function getEventTooltip(month, day) {
-            // Eventos y Feriados en Mayo (Mes 4)
-            if (month === 4) {
-                if (day === 1) return "FERIADO: Día Nacional del Trabajo";
-                if (day === 6) return "Weveo con los jefes (Día 1)";
-                if (day === 7) return "Energización del proyecto + Weveo con los Jefes";
-                if (day === 8) return "Weveo con los jefes (Día 3)";
-                if (day === 20) return "Americano de Tenis";
-                if (day === 21) return "FERIADO: Día de las Glorias Navales";
-                if (day === 27) return "Americano de Pádel 💄🎾";
-            }
-            
-            // Eventos y Feriados en Junio (Mes 5)
-            if (month === 5) {
-                if (day === 5) return "Partido de despedida (Previa mundialista)";
-                if (day === 11) return "Inicio de Mundial de Fútbol";
-                if (day === 15) return "Sorteo de la TV (España vs Cabo Verde)";
-                if (day === 16) return "Cena de inauguración de proyecto";
-                if (day === 25) return "Entrega de Notebooks";
-                if (day === 29) return "FERIADO: San Pedro y San Pablo";
-                if (day === 30) return "DÍA DEL FINIQUITO";
-            }
-            return "";
-        }
-
-        function buildMonthHTML(year, monthIndex, monthName) {
-            // Días en el mes
-            const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
-            // Día de la semana que empieza (0=Dom, 1=Lun...)
-            let firstDay = new Date(year, monthIndex, 1).getDay();
-            // Ajustar para que Lunes sea 0
-            firstDay = firstDay === 0 ? 6 : firstDay - 1;
-
-            const today = new Date();
-            const isCurrentMonth = today.getFullYear() === year && today.getMonth() === monthIndex;
-
-            let html = `
-            <div class="bg-black/40 border border-gray-800 rounded-xl p-4">
-                <h4 class="text-center font-neon text-white tracking-widest mb-3">${monthName}</h4>
-                <div class="grid grid-cols-7 gap-1 text-center text-[10px] text-gray-500 mb-2">
-                    <div>L</div><div>M</div><div>X</div><div>J</div><div>V</div><div>S</div><div>D</div>
-                </div>
-                <div class="grid grid-cols-7 gap-1">`;
-
-            // Celdas vacías previas
-            for (let i = 0; i < firstDay; i++) {
-                html += `<div></div>`;
-            }
-
-            // Días del mes
-            for (let day = 1; day <= daysInMonth; day++) {
-                let classes = "cal-day text-xs";
-                let tooltip = getEventTooltip(monthIndex, day);
-
-                // Marcar día actual
-                if (isCurrentMonth && today.getDate() === day) {
-                    classes += " cal-today";
-                }
-
-                // Lógica Eventos y Feriados MAYO
-                if (monthIndex === 4) {
-                    if (day === 1 || day === 21) {
-                        classes += " cal-holiday"; // Feriado (Naranja)
-                    }
-                    if ([6, 7, 8, 20, 27].includes(day)) {
-                        classes += " cal-special"; // Eventos (Amarillo)
-                    }
-                }
-
-                // Lógica Eventos y Feriados JUNIO
-                if (monthIndex === 5) {
-                    if ([5, 11, 15, 16, 25].includes(day)) {
-                        classes += " cal-special"; // Eventos (Amarillo)
-                    }
-                    if (day === 29) {
-                        classes += " cal-holiday"; // Feriado Chile (Naranja)
-                    }
-                    if (day === 30) {
-                        classes += " cal-target text-black font-black"; // Finiquito (Cyan)
-                    }
-                }
-
-                html += `<div class="${classes}" title="${tooltip}">${day}</div>`;
-            }
-
-            html += `</div></div>`;
-            return html;
-        }
-
+        // --- CALENDARIOS PRINCIPALES ---
         function initCalendars() {
-            const container = document.getElementById('calendars-container');
-            const year = new Date().getFullYear();
-            
-            // Generar Abril (3), Mayo (4) y Junio (5)
-            const htmlApril = buildMonthHTML(year, 3, "ABRIL");
-            const htmlMay   = buildMonthHTML(year, 4, "MAYO");
-            const htmlJune  = buildMonthHTML(year, 5, "JUNIO");
+            const getTooltip = (m, d) => {
+                if (m === 4) {
+                    if (d===1) return "Día Nacional del Trabajo"; if (d===6) return "Weveo jefes (Día 1)";
+                    if (d===7) return "Energización + Weveo jefes"; if (d===8) return "Weveo jefes (Día 3)";
+                    if (d===20) return "Americano de Tenis"; if (d===21) return "Glorias Navales";
+                    if (d===27) return "Americano de Pádel 💄🎾";
+                }
+                if (m === 5) {
+                    if (d===5) return "Despedida (Previa mundial)"; if (d===11) return "Mundial de Fútbol";
+                    if (d===15) return "Sorteo TV (ESP vs CPV)"; if (d===16) return "Cena inauguración";
+                    if (d===25) return "Entrega Notebooks"; if (d===29) return "San Pedro y San Pablo";
+                    if (d===30) return "FINIQUITO";
+                } return "";
+            };
 
-            container.innerHTML = htmlApril + htmlMay + htmlJune;
+            const buildMonth = (y, m, name) => {
+                const days = new Date(y, m + 1, 0).getDate();
+                let first = new Date(y, m, 1).getDay(); first = first === 0 ? 6 : first - 1;
+                const isCur = new Date().getFullYear()===y && new Date().getMonth()===m;
+                
+                let h = `<div class="bg-black/40 border border-gray-800 rounded-xl p-4"><h4 class="text-center font-neon text-white tracking-widest mb-3">${name}</h4><div class="grid grid-cols-7 gap-1 text-center text-[10px] text-gray-500 mb-2"><div>L</div><div>M</div><div>X</div><div>J</div><div>V</div><div>S</div><div>D</div></div><div class="grid grid-cols-7 gap-1">`;
+                for (let i = 0; i < first; i++) h += `<div></div>`;
+                for (let d = 1; d <= days; d++) {
+                    let cls = "cal-day text-xs";
+                    if (isCur && new Date().getDate() === d) cls += " cal-today";
+                    if (m === 4) { if (d===1||d===21) cls+=" cal-holiday"; if ([6,7,8,20,27].includes(d)) cls+=" cal-special"; }
+                    if (m === 5) { if ([5,11,15,16,25].includes(d)) cls+=" cal-special"; if (d===29) cls+=" cal-holiday"; if (d===30) cls+=" cal-target text-black font-black"; }
+                    h += `<div class="${cls}" title="${getTooltip(m,d)}">${d}</div>`;
+                } return h + `</div></div>`;
+            };
+
+            const year = new Date().getFullYear();
+            document.getElementById('calendars-container').innerHTML = buildMonth(year, 3, "ABRIL") + buildMonth(year, 4, "MAYO") + buildMonth(year, 5, "JUNIO");
         }
 
-        // --- INICIAR TODO AL CARGAR ---
+        // --- FIXTURE DEL MUNDIAL (DATOS REALES) ---
+        function initWorldCup() {
+            const matches = [
+                { date: "Jueves, 11 de Junio", games: [
+                    { time: "15:00", match: "México vs Sudáfrica", desc: "Grupo A - Estadio Ciudad de México" },
+                    { time: "22:00", match: "Rep. de Corea vs Rep. Checa", desc: "Grupo A - Estadio Guadalajara" }
+                ]},
+                { date: "Viernes, 12 de Junio", games: [
+                    { time: "15:00", match: "Canadá vs Bosnia y Herzegovina", desc: "Grupo B - Estadio Toronto" },
+                    { time: "21:00", match: "Estados Unidos vs Paraguay", desc: "Grupo D - Estadio Los Ángeles" }
+                ]},
+                { date: "Sábado, 13 de Junio", games: [
+                    { time: "15:00", match: "Catar vs Suiza", desc: "Grupo B - Estadio Bahía de San Francisco" },
+                    { time: "18:00", match: "Brasil vs Marruecos", desc: "Grupo C - Estadio NY/NJ" },
+                    { time: "21:00", match: "Haití vs Escocia", desc: "Grupo C - Estadio Boston" },
+                    { time: "00:00", match: "Australia vs Turquía", desc: "Grupo D - Estadio BC Place Vancouver" }
+                ]},
+                { date: "Domingo, 14 de Junio", games: [
+                    { time: "13:00", match: "Alemania vs Curazao", desc: "Grupo E - Estadio Houston" },
+                    { time: "16:00", match: "Países Bajos vs Japón", desc: "Grupo F - Estadio Dallas" },
+                    { time: "19:00", match: "Costa de Marfil vs Ecuador", desc: "Grupo E - Estadio Filadelfia" },
+                    { time: "22:00", match: "Suecia vs Túnez", desc: "Grupo F - Estadio Monterrey" }
+                ]},
+                { date: "Lunes, 15 de Junio", games: [
+                    { time: "12:00", match: "España vs Cabo Verde", desc: "Grupo H - ¡SORTEO DE LA TELEVISIÓN! (Atlanta)" },
+                    { time: "15:00", match: "Bélgica vs Egipto", desc: "Grupo G - Estadio Seattle" },
+                    { time: "18:00", match: "Arabia Saudí vs Uruguay", desc: "Grupo H - Estadio Miami" },
+                    { time: "21:00", match: "RI de Irán vs Nueva Zelanda", desc: "Grupo G - Estadio Los Ángeles" }
+                ]},
+                { date: "Martes, 16 de Junio", games: [
+                    { time: "15:00", match: "Francia vs Senegal", desc: "Grupo I - Estadio NY/NJ" },
+                    { time: "18:00", match: "Irak vs Noruega", desc: "Grupo I - Estadio Boston" },
+                    { time: "21:00", match: "Argentina vs Argelia", desc: "Grupo J - Estadio Kansas City" },
+                    { time: "00:00", match: "Austria vs Jordania", desc: "Grupo J - Estadio Bahía de San Francisco" }
+                ]},
+                { date: "Miércoles, 17 de Junio", games: [
+                    { time: "13:00", match: "Portugal vs RD Congo", desc: "Grupo K - Estadio Houston" },
+                    { time: "16:00", match: "Inglaterra vs Croacia", desc: "Grupo L - Estadio Dallas" },
+                    { time: "19:00", match: "Ghana vs Panamá", desc: "Grupo L - Estadio Toronto" },
+                    { time: "22:00", match: "Uzbekistán vs Colombia", desc: "Grupo K - Estadio Ciudad de México" }
+                ]},
+                { date: "Jueves, 18 de Junio", games: [
+                    { time: "12:00", match: "República Checa vs Sudáfrica", desc: "Grupo A - Estadio Atlanta" },
+                    { time: "15:00", match: "Suiza vs Bosnia y Herzegovina", desc: "Grupo B - Estadio Los Ángeles" },
+                    { time: "18:00", match: "Canadá vs Catar", desc: "Grupo B - Estadio BC Place Vancouver" },
+                    { time: "21:00", match: "México vs Rep. de Corea", desc: "Grupo A - Estadio Guadalajara" }
+                ]},
+                { date: "Viernes, 19 de Junio", games: [
+                    { time: "15:00", match: "Estados Unidos vs Australia", desc: "Grupo D - Estadio Seattle" },
+                    { time: "18:00", match: "Escocia vs Marruecos", desc: "Grupo C - Estadio Boston" },
+                    { time: "21:00", match: "Brasil vs Haití", desc: "Grupo C - Estadio Filadelfia" },
+                    { time: "00:00", match: "Turquía vs Paraguay", desc: "Grupo D - Estadio Bahía de San Francisco" }
+                ]},
+                { date: "Sábado, 20 de Junio", games: [
+                    { time: "13:00", match: "Países Bajos vs Suecia", desc: "Grupo F - Estadio Houston" },
+                    { time: "16:00", match: "Alemania vs Costa de Marfil", desc: "Grupo E - Estadio Toronto" },
+                    { time: "22:00", match: "Ecuador vs Curazao", desc: "Grupo E - Estadio Kansas City" },
+                    { time: "00:00", match: "Túnez vs Japón", desc: "Grupo F - Estadio Monterrey" }
+                ]},
+                { date: "Domingo, 21 de Junio", games: [
+                    { time: "12:00", match: "España vs Arabia Saudí", desc: "Grupo H - Estadio Atlanta" },
+                    { time: "15:00", match: "Bélgica vs Irán", desc: "Grupo G - Estadio Los Ángeles" },
+                    { time: "18:00", match: "Uruguay vs Cabo Verde", desc: "Grupo H - Estadio Miami" },
+                    { time: "21:00", match: "Nueva Zelanda vs Egipto", desc: "Grupo G - Estadio BC Place Vancouver" }
+                ]},
+                { date: "Lunes, 22 de Junio", games: [
+                    { time: "13:00", match: "Argentina vs Austria", desc: "Grupo J - Estadio Dallas" },
+                    { time: "17:00", match: "Francia vs Irak", desc: "Grupo I - Estadio Filadelfia" },
+                    { time: "20:00", match: "Noruega vs Senegal", desc: "Grupo I - Estadio NY/NJ" },
+                    { time: "23:00", match: "Jordania vs Argelia", desc: "Grupo J - Estadio Bahía de SF" }
+                ]},
+                { date: "Martes, 23 de Junio", games: [
+                    { time: "13:00", match: "Portugal vs Uzbekistán", desc: "Grupo K - Estadio Houston" },
+                    { time: "16:00", match: "Inglaterra vs Ghana", desc: "Grupo L - Estadio Boston" },
+                    { time: "19:00", match: "Panamá vs Croacia", desc: "Grupo L - Estadio Toronto" },
+                    { time: "22:00", match: "Colombia vs RD Congo", desc: "Grupo K - Estadio Guadalajara" }
+                ]},
+                { date: "Miércoles, 24 de Junio", games: [
+                    { time: "15:00", match: "Suiza vs Canadá", desc: "Grupo B - Estadio BC Place Vancouver" },
+                    { time: "15:00", match: "Bosnia y Herz. vs Catar", desc: "Grupo B - Estadio Seattle" },
+                    { time: "18:00", match: "Escocia vs Brasil", desc: "Grupo C - Estadio Miami" },
+                    { time: "18:00", match: "Marruecos vs Haití", desc: "Grupo C - Estadio Atlanta" },
+                    { time: "21:00", match: "República Checa vs México", desc: "Grupo A - Estadio Ciudad de México" },
+                    { time: "21:00", match: "Sudáfrica vs Rep. de Corea", desc: "Grupo A - Estadio Monterrey" }
+                ]},
+                { date: "Jueves, 25 de Junio", games: [
+                    { time: "16:00", match: "Curazao vs Costa de Marfil", desc: "Grupo E - Estadio Filadelfia" },
+                    { time: "16:00", match: "Ecuador vs Alemania", desc: "Grupo E - Estadio NY/NJ" },
+                    { time: "19:00", match: "Japón vs Suecia", desc: "Grupo F - Estadio Dallas" },
+                    { time: "19:00", match: "Túnez vs Países Bajos", desc: "Grupo F - Estadio Kansas City" },
+                    { time: "22:00", match: "Turquía vs Estados Unidos", desc: "Grupo D - Estadio Los Ángeles" },
+                    { time: "22:00", match: "Paraguay vs Australia", desc: "Grupo D - Estadio Bahía de SF" }
+                ]},
+                { date: "Viernes, 26 de Junio", games: [
+                    { time: "15:00", match: "Noruega vs Francia", desc: "Grupo I - Estadio Boston" },
+                    { time: "15:00", match: "Senegal vs Irak", desc: "Grupo I - Estadio Toronto" },
+                    { time: "20:00", match: "Cabo Verde vs Arabia Saudí", desc: "Grupo H - Estadio Houston" },
+                    { time: "20:00", match: "Uruguay vs España", desc: "Grupo H - Estadio Guadalajara" },
+                    { time: "23:00", match: "Egipto vs Irán", desc: "Grupo G - Estadio Seattle" },
+                    { time: "23:00", match: "Nueva Zelanda vs Bélgica", desc: "Grupo G - Estadio BC Place Vancouver" }
+                ]},
+                { date: "Sábado, 27 de Junio", games: [
+                    { time: "17:00", match: "Panamá vs Inglaterra", desc: "Grupo L - Estadio NY/NJ" },
+                    { time: "17:00", match: "Croacia vs Ghana", desc: "Grupo L - Estadio Filadelfia" },
+                    { time: "19:30", match: "Colombia vs Portugal", desc: "Grupo K - Estadio Miami" },
+                    { time: "19:30", match: "RD Congo vs Uzbekistán", desc: "Grupo K - Estadio Atlanta" },
+                    { time: "22:00", match: "Argelia vs Austria", desc: "Grupo J - Estadio Kansas City" },
+                    { time: "22:00", match: "Jordania vs Argentina", desc: "Grupo J - Estadio Dallas" }
+                ]}
+            ];
+
+            const grid = document.getElementById('world-cup-grid');
+            let html = "";
+
+            matches.forEach((day) => {
+                let gamesHtml = "";
+                day.games.forEach(g => {
+                    // Resaltar partido de España (Por el sorteo de la TV)
+                    const isSpecial = g.match.includes("España");
+                    gamesHtml += `
+                        <div class="mt-3 p-3 rounded bg-black/50 border ${isSpecial ? 'border-neonYellow shadow-[0_0_10px_rgba(255,234,0,0.2)]' : 'border-gray-800'}">
+                            <div class="flex flex-col mb-1">
+                                <span class="text-xs font-neon ${isSpecial ? 'text-neonYellow text-glow-yellow' : 'text-neonGreen'}">${g.time}</span>
+                                <span class="text-[10px] text-gray-500 uppercase leading-tight mt-1">${g.desc}</span>
+                            </div>
+                            <div class="font-bold text-sm md:text-base mt-1 leading-snug ${isSpecial ? 'text-white' : 'text-gray-200'}">${g.match}</div>
+                        </div>
+                    `;
+                });
+
+                html += `
+                    <div class="bg-gray-900/40 rounded-xl p-5 border border-gray-800 hover:border-neonGreen/50 transition-colors h-full flex flex-col">
+                        <div class="border-b border-gray-800 pb-2 mb-2">
+                            <h4 class="font-bold text-white text-lg">${day.date}</h4>
+                        </div>
+                        <div class="flex-1">
+                            ${gamesHtml}
+                        </div>
+                    </div>
+                `;
+            });
+
+            grid.innerHTML = html;
+        }
+
+        // --- INICIAR TODO ---
         window.onload = () => {
             initCountdown();
             initChecklist();
             initCalendars();
+            initWorldCup();
         };
     </script>
 </body>
