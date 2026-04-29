@@ -127,6 +127,9 @@
         <button onclick="switchView('mundial')" id="btn-mundial" class="px-6 py-2 rounded-full font-neon font-bold text-sm md:text-base border-2 border-gray-800 text-gray-500 hover:border-neonGreen hover:text-neonGreen transition-all">
             ⚽ FIXTURE MUNDIAL
         </button>
+        <button onclick="switchView('ruleta')" id="btn-ruleta" class="px-6 py-2 rounded-full font-neon font-bold text-sm md:text-base border-2 border-gray-800 text-gray-500 hover:border-neonPink hover:text-neonPink transition-all">
+            🎰 SORTEO
+        </button>
     </nav>
 
     <!-- ========================================== -->
@@ -182,7 +185,7 @@
                     <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors"><input type="checkbox" id="task_may27"><label for="task_may27" class="cursor-pointer text-base md:text-lg flex-1"><span class="text-neonYellow font-bold block mb-1">27 de Mayo</span>💄🎾 Americano de Pádel.</label></li>
                     <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors"><input type="checkbox" id="task_jun5"><label for="task_jun5" class="cursor-pointer text-base md:text-lg flex-1"><span class="text-neonYellow font-bold block mb-1">10 de Junio</span>🏃‍♂️ Partido de despedida (Previa mundialista).</label></li>
                     <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors"><input type="checkbox" id="task_jun11"><label for="task_jun11" class="cursor-pointer text-base md:text-lg flex-1"><span class="text-neonYellow font-bold block mb-1">11 de Junio</span>⚽ Inicio del Mundial de Fútbol.</label></li>
-                    <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors"><input type="checkbox" id="task_jun15"><label for="task_jun15" class="cursor-pointer text-base md:text-lg flex-1"><span class="text-neonYellow font-bold block mb-1">15 de Junio</span>📺 Sorteo de la televisión (España vs Cabo Verde).</label></li>
+                    <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors"><input type="checkbox" id="task_jun15"><label for="task_jun15" class="cursor-pointer text-base md:text-lg flex-1"><span class="text-neonYellow font-bold block mb-1">11 de Junio</span>📺 Sorteo de la televisión (México vs Sudáfrica).</label></li>
                     <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors"><input type="checkbox" id="task_jun16"><label for="task_jun16" class="cursor-pointer text-base md:text-lg flex-1"><span class="text-neonYellow font-bold block mb-1">16 de Junio</span>🍽️ Cena de inauguración de proyecto.</label></li>
                     <li class="flex items-start gap-4 p-4 rounded-xl bg-gray-900/50 border border-gray-800 hover:border-neonYellow transition-colors"><input type="checkbox" id="task_jun25"><label for="task_jun25" class="cursor-pointer text-base md:text-lg flex-1"><span class="text-neonYellow font-bold block mb-1">25 de Junio</span>💻 Entrega de Notebooks para la casa.</label></li>
                     <li class="flex items-start gap-4 p-4 mt-6 rounded-xl bg-gray-900/80 border-2 border-neonCyan shadow-[0_0_15px_rgba(0,243,255,0.2)]"><input type="checkbox" id="task_jun30"><label for="task_jun30" class="cursor-pointer text-xl font-bold flex-1 text-white"><span class="text-neonCyan block mb-1 text-glow-cyan">30 de Junio</span>💰 FIRMAR EL FINIQUITO Y CELEBRAR</label></li>
@@ -213,6 +216,87 @@
     </div>
 
     <!-- ========================================== -->
+    <!-- VISTA 3: SORTEO / RULETA                   -->
+    <!-- ========================================== -->
+    <div id="view-ruleta" class="w-full max-w-5xl hidden fade-in">
+        <header class="text-center mb-10">
+            <h2 class="text-neonPink font-bold tracking-widest uppercase mb-2">Tómbola Oficial</h2>
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-neon font-black tracking-wider uppercase" style="color:#ff0055;text-shadow:0 0 10px #ff0055,0 0 30px #ff0055;">
+                SORTEO
+            </h1>
+            <p class="mt-3 text-xl md:text-2xl text-gray-400">Carga los participantes y que la suerte decida.</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+
+            <!-- COLUMNA IZQ: Carga y lista -->
+            <div class="space-y-6">
+                <!-- Cargar archivo -->
+                <div class="bg-panelBg rounded-2xl p-6" style="border:1px solid rgba(255,0,85,0.3);box-shadow:0 0 15px rgba(255,0,85,0.1)">
+                    <h3 class="text-xl font-neon mb-4 pb-2 border-b border-gray-800" style="color:#ff0055;">CARGAR PARTICIPANTES</h3>
+                    <p class="text-gray-400 text-sm mb-4">Sube un archivo <span class="text-white font-bold">.txt</span> con un nombre por línea.</p>
+                    <label class="flex flex-col items-center justify-center w-full h-32 rounded-xl border-2 border-dashed cursor-pointer transition-all hover:bg-pink-950/20" style="border-color:rgba(255,0,85,0.4);" id="drop-zone">
+                        <span class="text-4xl mb-2">📂</span>
+                        <span class="text-gray-400 text-sm">Haz clic o arrastra tu archivo .txt aquí</span>
+                        <input type="file" accept=".txt" id="file-input" class="hidden">
+                    </label>
+                    <!-- Editor manual -->
+                    <div class="mt-4">
+                        <p class="text-gray-500 text-xs mb-2">O escribe / pega los nombres directamente:</p>
+                        <textarea id="manual-input" rows="5" placeholder="Juan&#10;María&#10;Pedro&#10;Ana..." class="w-full bg-black/50 border border-gray-700 rounded-lg p-3 text-sm text-gray-200 resize-none focus:outline-none focus:border-pink-500 transition-colors"></textarea>
+                        <button onclick="loadFromTextarea()" class="mt-2 w-full py-2 rounded-lg font-neon font-bold text-sm transition-all" style="background:rgba(255,0,85,0.15);border:1px solid rgba(255,0,85,0.5);color:#ff0055;">
+                            ✅ CARGAR NOMBRES
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Lista de participantes -->
+                <div class="bg-panelBg rounded-2xl p-6" style="border:1px solid rgba(255,0,85,0.2);">
+                    <div class="flex items-center justify-between mb-4 pb-2 border-b border-gray-800">
+                        <h3 class="text-xl font-neon" style="color:#ff0055;">PARTICIPANTES</h3>
+                        <span id="participants-count" class="font-neon text-2xl text-white">0</span>
+                    </div>
+                    <ul id="participants-list" class="space-y-2 max-h-72 overflow-y-auto pr-2">
+                        <li class="text-gray-600 text-sm italic text-center py-4">Aún no hay participantes cargados.</li>
+                    </ul>
+                    <button onclick="resetAll()" class="mt-4 w-full py-2 rounded-lg font-bold text-xs text-gray-500 border border-gray-800 hover:border-gray-600 hover:text-gray-300 transition-all">
+                        🗑️ LIMPIAR TODO
+                    </button>
+                </div>
+            </div>
+
+            <!-- COLUMNA DER: Ruleta / Resultado -->
+            <div class="flex flex-col items-center gap-6">
+                <!-- Canvas ruleta -->
+                <div class="relative flex items-center justify-center w-full">
+                    <!-- Puntero -->
+                    <div class="absolute top-0 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center" style="margin-top:-8px;">
+                        <div style="width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;border-top:32px solid #ff0055;filter:drop-shadow(0 0 8px #ff0055);"></div>
+                    </div>
+                    <canvas id="roulette-canvas" width="380" height="380" class="rounded-full" style="max-width:100%;box-shadow:0 0 40px rgba(255,0,85,0.3);"></canvas>
+                </div>
+
+                <!-- Botón girar -->
+                <button id="spin-btn" onclick="spinWheel()" class="px-12 py-4 rounded-full font-neon font-black text-xl tracking-widest transition-all disabled:opacity-40 disabled:cursor-not-allowed" style="background:linear-gradient(135deg,#ff0055,#b026ff);box-shadow:0 0 25px rgba(255,0,85,0.4);color:white;">
+                    🎰 ¡GIRAR!
+                </button>
+
+                <!-- Resultado -->
+                <div id="result-box" class="w-full rounded-2xl p-6 text-center hidden" style="background:rgba(255,0,85,0.05);border:2px solid #ff0055;box-shadow:0 0 30px rgba(255,0,85,0.2);">
+                    <p class="text-gray-400 text-sm mb-2 font-neon tracking-widest">🏆 GANADOR/A</p>
+                    <p id="result-name" class="text-3xl md:text-4xl font-neon font-black" style="color:#ff0055;text-shadow:0 0 15px #ff0055;"></p>
+                </div>
+
+                <!-- Historial -->
+                <div id="history-box" class="w-full rounded-2xl p-4 hidden" style="border:1px solid rgba(176,38,255,0.3);background:rgba(176,38,255,0.05);">
+                    <h4 class="font-neon text-neonPurple text-sm mb-3">HISTORIAL DE SORTEOS</h4>
+                    <ul id="history-list" class="space-y-1 text-sm text-gray-300 max-h-40 overflow-y-auto"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
     <!-- SCRIPTS                                    -->
     <!-- ========================================== -->
     <script>
@@ -220,19 +304,27 @@
         function switchView(view) {
             document.getElementById('view-home').classList.add('hidden');
             document.getElementById('view-mundial').classList.add('hidden');
+            document.getElementById('view-ruleta').classList.add('hidden');
             
             const btnHome = document.getElementById('btn-home');
             const btnMundial = document.getElementById('btn-mundial');
+            const btnRuleta = document.getElementById('btn-ruleta');
             
-            btnHome.className = "px-6 py-2 rounded-full font-neon font-bold text-sm md:text-base border-2 border-gray-800 text-gray-500 hover:border-neonCyan hover:text-neonCyan transition-all";
-            btnMundial.className = "px-6 py-2 rounded-full font-neon font-bold text-sm md:text-base border-2 border-gray-800 text-gray-500 hover:border-neonGreen hover:text-neonGreen transition-all";
+            const baseHome = "px-6 py-2 rounded-full font-neon font-bold text-sm md:text-base border-2 border-gray-800 text-gray-500 hover:border-neonCyan hover:text-neonCyan transition-all";
+            const baseMundial = "px-6 py-2 rounded-full font-neon font-bold text-sm md:text-base border-2 border-gray-800 text-gray-500 hover:border-neonGreen hover:text-neonGreen transition-all";
+            const baseRuleta = "px-6 py-2 rounded-full font-neon font-bold text-sm md:text-base border-2 border-gray-800 text-gray-500 hover:border-neonPink hover:text-neonPink transition-all";
+            btnHome.className = baseHome; btnMundial.className = baseMundial; btnRuleta.className = baseRuleta;
 
             if(view === 'home') {
                 document.getElementById('view-home').classList.remove('hidden');
                 btnHome.className = "px-6 py-2 rounded-full font-neon font-bold text-sm md:text-base border-2 border-neonCyan text-neonCyan shadow-[0_0_15px_rgba(0,243,255,0.3)] transition-all";
-            } else {
+            } else if(view === 'mundial') {
                 document.getElementById('view-mundial').classList.remove('hidden');
                 btnMundial.className = "px-6 py-2 rounded-full font-neon font-bold text-sm md:text-base border-2 border-neonGreen text-neonGreen shadow-[0_0_15px_rgba(0,255,102,0.3)] transition-all";
+            } else {
+                document.getElementById('view-ruleta').classList.remove('hidden');
+                btnRuleta.className = "px-6 py-2 rounded-full font-neon font-bold text-sm md:text-base border-2 border-neonPink text-neonPink shadow-[0_0_15px_rgba(255,0,85,0.3)] transition-all";
+                drawWheel();
             }
         }
 
@@ -278,8 +370,8 @@
                     if (d===27) return "Americano de Pádel 💄🎾";
                 }
                 if (m === 5) {
-                    if (d===3) return "Americano de Tenis 🎾"; if (d===10) return "Despedida (Previa mundial)"; if (d===11) return "Mundial de Fútbol";
-                    if (d===15) return "Sorteo TV (ESP vs CPV)"; if (d===16) return "Cena inauguración";
+                    if (d===3) return "Americano de Tenis 🎾"; if (d===10) return "Despedida (Previa mundial)"; if (d===11) return "Mundial de Fútbol + Sorteo TV (MEX vs RSA) 📺";
+                    if (d===16) return "Cena inauguración";
                     if (d===25) return "Entrega Notebooks"; if (d===29) return "San Pedro y San Pablo";
                     if (d===30) return "FINIQUITO";
                 } return "";
@@ -296,7 +388,7 @@
                     let cls = "cal-day text-xs";
                     if (isCur && new Date().getDate() === d) cls += " cal-today";
                     if (m === 4) { if (d===1||d===21) cls+=" cal-holiday"; if ([6,7,8,27].includes(d)) cls+=" cal-special"; }
-                    if (m === 5) { if ([3,10,11,15,16,25].includes(d)) cls+=" cal-special"; if (d===29) cls+=" cal-holiday"; if (d===30) cls+=" cal-target text-black font-black"; }
+                    if (m === 5) { if ([3,10,11,16,25].includes(d)) cls+=" cal-special"; if (d===29) cls+=" cal-holiday"; if (d===30) cls+=" cal-target text-black font-black"; }
                     h += `<div class="${cls}" title="${getTooltip(m,d)}">${d}</div>`;
                 } return h + `</div></div>`;
             };
@@ -422,8 +514,8 @@
             matches.forEach((day) => {
                 let gamesHtml = "";
                 day.games.forEach(g => {
-                    // Resaltar partido de España (Por el sorteo de la TV)
-                    const isSpecial = g.match.includes("España");
+                    // Resaltar partido de México vs Sudáfrica (Sorteo de la TV)
+                    const isSpecial = g.match.includes("México vs Sudáfrica");
                     gamesHtml += `
                         <div class="mt-3 p-3 rounded bg-black/50 border ${isSpecial ? 'border-neonYellow shadow-[0_0_10px_rgba(255,234,0,0.2)]' : 'border-gray-800'}">
                             <div class="flex flex-col mb-1">
@@ -450,13 +542,247 @@
             grid.innerHTML = html;
         }
 
-        // --- INICIAR TODO ---
-        window.onload = () => {
+        // --- RULETA / TÓMBOLA ---
+        let participants = [];
+        let spinning = false;
+        let currentAngle = 0;
+        let sorteoHistory = [];
+
+        const COLORS = [
+            ['#ff0055','#cc0044'],['#b026ff','#8a1ecc'],['#00f3ff','#00bfcc'],
+            ['#ff6600','#cc5200'],['#00ff66','#00cc52'],['#ffea00','#ccbb00'],
+            ['#ff3399','#cc2277'],['#7b2fff','#5e22cc'],['#00ccff','#0099cc'],
+            ['#ff8800','#cc6d00'],
+        ];
+
+        function updateParticipantsList() {
+            const list = document.getElementById('participants-list');
+            const count = document.getElementById('participants-count');
+            count.textContent = participants.length;
+            if (participants.length === 0) {
+                list.innerHTML = '<li class="text-gray-600 text-sm italic text-center py-4">Aún no hay participantes cargados.</li>';
+                return;
+            }
+            list.innerHTML = participants.map((p, i) => {
+                const col = COLORS[i % COLORS.length][0];
+                return `<li class="flex items-center gap-3 p-2 rounded-lg bg-black/30 border border-gray-800">
+                    <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-black flex-shrink-0" style="background:${col}">${i+1}</span>
+                    <span class="text-gray-200 text-sm">${p}</span>
+                    <button onclick="removeParticipant(${i})" class="ml-auto text-gray-600 hover:text-red-400 text-xs transition-colors">✕</button>
+                </li>`;
+            }).join('');
+            drawWheel();
+        }
+
+        function removeParticipant(idx) {
+            participants.splice(idx, 1);
+            updateParticipantsList();
+        }
+
+        function loadFromTextarea() {
+            const raw = document.getElementById('manual-input').value;
+            const names = raw.split('\n').map(n => n.trim()).filter(n => n.length > 0);
+            if (names.length === 0) return;
+            participants = [...new Set([...participants, ...names])];
+            updateParticipantsList();
+            document.getElementById('manual-input').value = '';
+        }
+
+        function resetAll() {
+            participants = [];
+            sorteoHistory = [];
+            currentAngle = 0;
+            document.getElementById('result-box').classList.add('hidden');
+            document.getElementById('history-box').classList.add('hidden');
+            document.getElementById('history-list').innerHTML = '';
+            updateParticipantsList();
+            drawWheel();
+        }
+
+        // File input
+        document.getElementById('file-input').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                const names = ev.target.result.split('\n').map(n => n.trim()).filter(n => n.length > 0);
+                participants = [...new Set([...participants, ...names])];
+                updateParticipantsList();
+            };
+            reader.readAsText(file);
+        });
+
+        // Drag & drop
+        const dropZone = document.getElementById('drop-zone');
+        dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.style.background='rgba(255,0,85,0.1)'; });
+        dropZone.addEventListener('dragleave', () => { dropZone.style.background=''; });
+        dropZone.addEventListener('drop', e => {
+            e.preventDefault(); dropZone.style.background='';
+            const file = e.dataTransfer.files[0];
+            if (!file || !file.name.endsWith('.txt')) return;
+            const reader = new FileReader();
+            reader.onload = ev => {
+                const names = ev.target.result.split('\n').map(n => n.trim()).filter(n => n.length > 0);
+                participants = [...new Set([...participants, ...names])];
+                updateParticipantsList();
+            };
+            reader.readAsText(file);
+        });
+
+        function drawWheel(highlightIdx = -1) {
+            const canvas = document.getElementById('roulette-canvas');
+            const ctx = canvas.getContext('2d');
+            const W = canvas.width, H = canvas.height;
+            const cx = W/2, cy = H/2, r = W/2 - 8;
+            ctx.clearRect(0, 0, W, H);
+
+            if (participants.length === 0) {
+                // Rueda vacía
+                ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2*Math.PI);
+                ctx.fillStyle = '#11131a'; ctx.fill();
+                ctx.strokeStyle = 'rgba(255,0,85,0.3)'; ctx.lineWidth = 4; ctx.stroke();
+                ctx.fillStyle = 'rgba(255,255,255,0.2)';
+                ctx.font = 'bold 16px Orbitron, sans-serif';
+                ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                ctx.fillText('Sin participantes', cx, cy);
+                return;
+            }
+
+            const n = participants.length;
+            const sliceAngle = (2 * Math.PI) / n;
+
+            // Sombra exterior
+            ctx.save();
+            ctx.shadowColor = '#ff0055';
+            ctx.shadowBlur = 30;
+            ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2*Math.PI);
+            ctx.strokeStyle = '#ff0055'; ctx.lineWidth = 3; ctx.stroke();
+            ctx.restore();
+
+            for (let i = 0; i < n; i++) {
+                const startAngle = currentAngle + i * sliceAngle - Math.PI/2;
+                const endAngle = startAngle + sliceAngle;
+                const col = COLORS[i % COLORS.length];
+                const isHighlight = i === highlightIdx;
+
+                // Sector
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.arc(cx, cy, r, startAngle, endAngle);
+                ctx.closePath();
+                const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+                grad.addColorStop(0, isHighlight ? '#ffffff' : col[0] + 'cc');
+                grad.addColorStop(1, isHighlight ? col[0] : col[1]);
+                ctx.fillStyle = grad;
+                ctx.fill();
+                ctx.strokeStyle = '#050505'; ctx.lineWidth = 2; ctx.stroke();
+
+                // Texto
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.rotate(startAngle + sliceAngle/2);
+                const maxTextR = r - 14;
+                const textR = Math.min(maxTextR * 0.65, maxTextR - 20);
+                ctx.textAlign = 'right';
+                ctx.textBaseline = 'middle';
+                ctx.fillStyle = isHighlight ? '#050505' : 'rgba(255,255,255,0.95)';
+                const fontSize = n > 20 ? 9 : n > 12 ? 11 : n > 7 ? 13 : 15;
+                ctx.font = `bold ${fontSize}px Rajdhani, sans-serif`;
+                // Truncar si es muy largo
+                let label = participants[i];
+                ctx.shadowColor = 'rgba(0,0,0,0.7)'; ctx.shadowBlur = 4;
+                ctx.fillText(label, maxTextR - 6, 0);
+                ctx.restore();
+            }
+
+            // Centro hub
+            ctx.beginPath(); ctx.arc(cx, cy, 22, 0, 2*Math.PI);
+            const hubGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 22);
+            hubGrad.addColorStop(0, '#444'); hubGrad.addColorStop(1, '#111');
+            ctx.fillStyle = hubGrad; ctx.fill();
+            ctx.strokeStyle = '#ff0055'; ctx.lineWidth = 3;
+            ctx.shadowColor = '#ff0055'; ctx.shadowBlur = 10; ctx.stroke();
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = 'white'; ctx.font = 'bold 14px Orbitron,sans-serif';
+            ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.fillText('🎰', cx, cy);
+        }
+
+        function spinWheel() {
+            if (spinning) return;
+            if (participants.length === 0) {
+                alert('¡Carga participantes primero!');
+                return;
+            }
+            spinning = true;
+            document.getElementById('spin-btn').disabled = true;
+            document.getElementById('result-box').classList.add('hidden');
+
+            const extraSpins = 8 + Math.random() * 6; // 8-14 vueltas extra
+            const winnerIdx = Math.floor(Math.random() * participants.length);
+            const sliceAngle = (2 * Math.PI) / participants.length;
+            // El puntero está arriba (270°), queremos que el sector ganador quede ahí
+            const targetAngle = (2 * Math.PI * extraSpins) + ((participants.length - winnerIdx) * sliceAngle) - sliceAngle/2;
+
+            const startAngle = currentAngle;
+            const totalDelta = targetAngle;
+            const duration = 5000 + Math.random() * 2000;
+            let startTime = null;
+
+            function easeOut(t) { return 1 - Math.pow(1 - t, 4); }
+
+            function animate(ts) {
+                if (!startTime) startTime = ts;
+                const elapsed = ts - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = easeOut(progress);
+                currentAngle = (startAngle + totalDelta * eased) % (2 * Math.PI);
+                drawWheel(progress === 1 ? winnerIdx : -1);
+
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    spinning = false;
+                    document.getElementById('spin-btn').disabled = false;
+                    showResult(participants[winnerIdx], winnerIdx);
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+
+        function showResult(name, idx) {
+            const box = document.getElementById('result-box');
+            const nameEl = document.getElementById('result-name');
+            nameEl.textContent = name;
+            box.classList.remove('hidden');
+            // Historial
+            sorteoHistory.unshift({ name, num: sorteoHistory.length + 1 });
+            const hbox = document.getElementById('history-box');
+            const hlist = document.getElementById('history-list');
+            hbox.classList.remove('hidden');
+            hlist.innerHTML = sorteoHistory.map(s =>
+                `<li class="flex items-center gap-2"><span class="text-gray-500 text-xs">#${s.num}</span><span class="text-neonPink font-bold">🏆 ${s.name}</span></li>`
+            ).join('');
+            // Efecto flash
+            box.style.animation = 'none';
+            void box.offsetWidth;
+            box.style.animation = 'fadeIn 0.4s ease-in-out';
+        }
+
+        // Participantes precargados
+        participants = [
+            "Pato Cordero","Tommy","Pato Cortés","Ale","Abraham",
+            "Mauro","Ricardo","Magda","Tomás","Yerko",
+            "Felipe","Cristóbal","Fabián","Sandra","Marina"
+        ];
+
+        window.addEventListener('load', () => {
             initCountdown();
             initChecklist();
             initCalendars();
             initWorldCup();
-        };
+            updateParticipantsList();
+        });
     </script>
 </body>
 </html>
