@@ -718,18 +718,28 @@
             document.getElementById('spin-btn').disabled = true;
             document.getElementById('result-box').classList.add('hidden');
 
-            const extraSpins = 8 + Math.random() * 6; // 8-14 vueltas extra
-            const winnerIdx = Math.floor(Math.random() * participants.length);
-            const sliceAngle = (2 * Math.PI) / participants.length;
-            // El puntero está arriba (270°), queremos que el sector ganador quede ahí
-            const targetAngle = (2 * Math.PI * extraSpins) + ((participants.length - winnerIdx) * sliceAngle) - sliceAngle/2;
+            const n = participants.length;
+            const sliceAngle = (2 * Math.PI) / n;
+            const extraSpins = 8 + Math.random() * 6;
+            // Elegir ángulo final aleatorio total
+            const totalDelta = (2 * Math.PI * extraSpins) + Math.random() * 2 * Math.PI;
 
             const startAngle = currentAngle;
-            const totalDelta = targetAngle;
             const duration = 5000 + Math.random() * 2000;
             let startTime = null;
 
             function easeOut(t) { return 1 - Math.pow(1 - t, 4); }
+
+            // Calcula qué índice queda bajo el puntero (arriba = -PI/2)
+            function getWinnerIdx(angle) {
+                // El puntero apunta a -PI/2 (arriba). Normalizamos qué sector cubre ese punto.
+                // El sector i empieza en: angle + i*sliceAngle - PI/2
+                // El puntero está en -PI/2, o sea necesitamos qué i cumple que
+                // (angle + i*sliceAngle - PI/2) <= -PI/2 < (angle + i*sliceAngle - PI/2 + sliceAngle)
+                // Simplificado: qué sector contiene el ángulo 0 (arriba) dado currentAngle
+                let normalized = ((- angle) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
+                return Math.floor(normalized / sliceAngle) % n;
+            }
 
             function animate(ts) {
                 if (!startTime) startTime = ts;
@@ -737,13 +747,16 @@
                 const progress = Math.min(elapsed / duration, 1);
                 const eased = easeOut(progress);
                 currentAngle = (startAngle + totalDelta * eased) % (2 * Math.PI);
-                drawWheel(progress === 1 ? winnerIdx : -1);
 
-                if (progress < 1) {
+                const isDone = progress === 1;
+                drawWheel(isDone ? getWinnerIdx(currentAngle) : -1);
+
+                if (!isDone) {
                     requestAnimationFrame(animate);
                 } else {
                     spinning = false;
                     document.getElementById('spin-btn').disabled = false;
+                    const winnerIdx = getWinnerIdx(currentAngle);
                     showResult(participants[winnerIdx], winnerIdx);
                 }
             }
