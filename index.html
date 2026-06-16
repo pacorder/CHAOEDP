@@ -401,36 +401,36 @@
         function initWorldCup() {
             const matches = [
                 { date: "Jueves, 11 de Junio", games: [
-                    { time: "15:00", match: "México vs Sudáfrica", desc: "Grupo A - Estadio Ciudad de México" },
-                    { time: "22:00", match: "Rep. de Corea vs Rep. Checa", desc: "Grupo A - Estadio Guadalajara" }
+                    { time: "FT", match: "México 2–0 Sudáfrica 🟡", desc: "Grupo A - Estadio Ciudad de México · ¡SORTEO DE LA TELEVISIÓN!" },
+                    { time: "FT", match: "Rep. de Corea 2–1 Rep. Checa", desc: "Grupo A - Estadio Guadalajara" }
                 ]},
                 { date: "Viernes, 12 de Junio", games: [
-                    { time: "15:00", match: "Canadá vs Bosnia y Herzegovina", desc: "Grupo B - Estadio Toronto" },
-                    { time: "21:00", match: "Estados Unidos vs Paraguay", desc: "Grupo D - Estadio Los Ángeles" }
+                    { time: "FT", match: "Canadá 1–1 Bosnia y Herzegovina", desc: "Grupo B - Estadio Toronto" },
+                    { time: "FT", match: "Estados Unidos 4–1 Paraguay", desc: "Grupo D - Estadio Los Ángeles" }
                 ]},
                 { date: "Sábado, 13 de Junio", games: [
-                    { time: "15:00", match: "Catar vs Suiza", desc: "Grupo B - Estadio Bahía de San Francisco" },
-                    { time: "18:00", match: "Brasil vs Marruecos", desc: "Grupo C - Estadio NY/NJ" },
-                    { time: "21:00", match: "Haití vs Escocia", desc: "Grupo C - Estadio Boston" },
-                    { time: "00:00", match: "Australia vs Turquía", desc: "Grupo D - Estadio BC Place Vancouver" }
+                    { time: "FT", match: "Catar 1–1 Suiza", desc: "Grupo B - Estadio Bahía de San Francisco" },
+                    { time: "FT", match: "Brasil 1–1 Marruecos", desc: "Grupo C - Estadio NY/NJ" },
+                    { time: "FT", match: "Haití 0–1 Escocia", desc: "Grupo C - Estadio Boston" },
+                    { time: "FT", match: "Australia 2–0 Turquía", desc: "Grupo D - Estadio BC Place Vancouver" }
                 ]},
                 { date: "Domingo, 14 de Junio", games: [
-                    { time: "13:00", match: "Alemania vs Curazao", desc: "Grupo E - Estadio Houston" },
-                    { time: "16:00", match: "Países Bajos vs Japón", desc: "Grupo F - Estadio Dallas" },
-                    { time: "19:00", match: "Costa de Marfil vs Ecuador", desc: "Grupo E - Estadio Filadelfia" },
-                    { time: "22:00", match: "Suecia vs Túnez", desc: "Grupo F - Estadio Monterrey" }
+                    { time: "FT", match: "Alemania 7–1 Curazao", desc: "Grupo E - Estadio Houston" },
+                    { time: "FT", match: "Países Bajos 2–2 Japón", desc: "Grupo F - Estadio Dallas" },
+                    { time: "FT", match: "Costa de Marfil 1–0 Ecuador", desc: "Grupo E - Estadio Filadelfia" },
+                    { time: "FT", match: "Suecia 5–1 Túnez", desc: "Grupo F - Estadio Monterrey" }
                 ]},
                 { date: "Lunes, 15 de Junio", games: [
-                    { time: "12:00", match: "España vs Cabo Verde", desc: "Grupo H - ¡SORTEO DE LA TELEVISIÓN! (Atlanta)" },
-                    { time: "15:00", match: "Bélgica vs Egipto", desc: "Grupo G - Estadio Seattle" },
-                    { time: "18:00", match: "Arabia Saudí vs Uruguay", desc: "Grupo H - Estadio Miami" },
-                    { time: "21:00", match: "RI de Irán vs Nueva Zelanda", desc: "Grupo G - Estadio Los Ángeles" }
+                    { time: "FT", match: "España 0–0 Cabo Verde", desc: "Grupo H - Estadio Atlanta" },
+                    { time: "FT", match: "Bélgica 1–1 Egipto", desc: "Grupo G - Estadio Seattle" },
+                    { time: "FT", match: "Arabia Saudí 1–1 Uruguay", desc: "Grupo H - Estadio Miami" },
+                    { time: "FT", match: "RI de Irán 2–2 Nueva Zelanda", desc: "Grupo G - Estadio Los Ángeles" }
                 ]},
                 { date: "Martes, 16 de Junio", games: [
-                    { time: "15:00", match: "Francia vs Senegal", desc: "Grupo I - Estadio NY/NJ" },
-                    { time: "18:00", match: "Irak vs Noruega", desc: "Grupo I - Estadio Boston" },
-                    { time: "21:00", match: "Argentina vs Argelia", desc: "Grupo J - Estadio Kansas City" },
-                    { time: "00:00", match: "Austria vs Jordania", desc: "Grupo J - Estadio Bahía de San Francisco" }
+                    { time: "1'", match: "Francia vs Senegal", desc: "Grupo I - Estadio NY/NJ · EN CURSO" },
+                    { time: "22:00", match: "Irak vs Noruega", desc: "Grupo I - Estadio Boston" },
+                    { time: "01:00", match: "Argentina vs Argelia", desc: "Grupo J - Estadio Kansas City" },
+                    { time: "04:00", match: "Austria vs Jordania", desc: "Grupo J - Estadio Bahía de San Francisco" }
                 ]},
                 { date: "Miércoles, 17 de Junio", games: [
                     { time: "13:00", match: "Portugal vs RD Congo", desc: "Grupo K - Estadio Houston" },
@@ -515,7 +515,7 @@
                 let gamesHtml = "";
                 day.games.forEach(g => {
                     // Resaltar partido de México vs Sudáfrica (Sorteo de la TV)
-                    const isSpecial = g.match.includes("México vs Sudáfrica");
+                    const isSpecial = g.match.includes("México") && g.match.includes("Sudáfrica");
                     gamesHtml += `
                         <div class="mt-3 p-3 rounded bg-black/50 border ${isSpecial ? 'border-neonYellow shadow-[0_0_10px_rgba(255,234,0,0.2)]' : 'border-gray-800'}">
                             <div class="flex flex-col mb-1">
